@@ -216,16 +216,6 @@
                 box-shadow: 0 15px 40px rgba(15, 23, 42, 0.06);
                 border-color: var(--ag-primary);
             }
-            .ag-pub-icon {
-                width: 50px;
-                height: 50px;
-                border-radius: 14px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.4rem;
-                margin-bottom: 5px;
-            }
             
             @media (max-width: 991px) {
                 .ag-grid-2 {
@@ -245,28 +235,20 @@
             <div class="ag-card" style="border-bottom: 4px solid var(--ag-primary);">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px;">
                     <div>
-                        <div class="ag-header-pill"><i class="fa-solid fa-star"></i> Primary Guidelines</div>
+                        <div class="ag-header-pill"><i class="fa-solid fa-star"></i> {{ $settings['abstract_tag'] ?? 'PRIMARY GUIDELINES' }}</div>
                         <h3 class="ag-title">
-                            Abstract Submission
+                            {{ $settings['abstract_title'] ?? 'Abstract Submission' }}
                         </h3>
                     </div>
                 </div>
                 
                 <ul class="ag-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 15px;">
-                    <li><i class="fa-solid fa-check-circle"></i> <span>Abstracts should be original and highly relevant to the conference themes.</span></li>
-                    <li><i class="fa-solid fa-check-circle"></i> <span><strong>Word Limit:</strong> Strictly 250–300 words</span></li>
-                    <li><i class="fa-solid fa-check-circle"></i> <span><strong>Format Structure:</strong> Title, Authors, Affiliation, Background, Objectives, Methods, Results, Conclusion, Keywords</span></li>
-                    <li><i class="fa-solid fa-check-circle"></i> <span><strong>File Type:</strong> Submit exclusively in MS Word format (.doc or .docx)</span></li>
-                    <li><i class="fa-solid fa-check-circle"></i> <span><strong>Registration:</strong> Presenting author must register for the conference.</span></li>
-                    <li><i class="fa-solid fa-check-circle"></i> <span><strong>Review Process:</strong> All abstracts will undergo a rigorous peer review.</span></li>
+                    @for($i = 1; $i <= ($settings['abstract_count'] ?? 20); $i++)
+                        @if(!empty($settings['abstract_item_' . $i]))
+                            <li><i class="fa-solid fa-check-circle"></i> <span>{!! $settings['abstract_item_' . $i] !!}</span></li>
+                        @endif
+                    @endfor
                 </ul>
-                
-                <div style="margin-top: 40px; text-align: center; position: relative;">
-                    <div style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(0, 150, 136, 0.3), transparent); z-index: 1;"></div>
-                    <a href="/submit-paper" class="ag-submit-btn" style="position: relative; z-index: 2;">
-                        Submit Your Abstract <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                </div>
             </div>
         </div>
 
@@ -275,35 +257,29 @@
             <!-- Oral Presentation -->
             <div class="ag-card">
                 <h3 class="ag-title">
-                    Oral Presentation
+                    {{ $settings['oral_title'] ?? 'Oral Presentation' }}
                 </h3>
                 <ul class="ag-list">
-                    <li><i class="fa-solid fa-check-circle"></i> <span><strong>Format:</strong> PowerPoint Presentation (PPT) format only</span></li>
-                    <li><i class="fa-solid fa-check-circle"></i> <span><strong>Total Time:</strong> 7 Minutes maximum</span></li>
-                    <li><i class="fa-solid fa-check-circle"></i> <span><strong>Presentation Window:</strong> 5 Minutes</span></li>
-                    <li><i class="fa-solid fa-check-circle"></i> <span><strong>Q & A Session:</strong> 2 Minutes allocated for audience questions</span></li>
+                    @for($i = 1; $i <= ($settings['oral_count'] ?? 20); $i++)
+                        @if(!empty($settings['oral_item_' . $i]))
+                            <li><i class="fa-solid fa-check-circle"></i> <span>{!! $settings['oral_item_' . $i] !!}</span></li>
+                        @endif
+                    @endfor
                 </ul>
             </div>
 
             <!-- Poster Presentation -->
             <div class="ag-card">
                 <h3 class="ag-title">
-                    Poster Presentation
+                    {{ $settings['poster_title'] ?? 'Poster Presentation' }}
                 </h3>
                 <ul class="ag-list" style="margin-bottom: 25px;">
-                    <li><i class="fa-solid fa-check-circle"></i> <span><strong>Language:</strong> Posters should be presented in English.</span></li>
-                    <li><i class="fa-solid fa-check-circle"></i> <span><strong>Design:</strong> Content must be clear, concise and visually appealing.</span></li>
-                    <li><i class="fa-solid fa-check-circle"></i> <span><strong>Required Elements:</strong> Title, Authors, Affiliation, Introduction, Methods, Results, Conclusion.</span></li>
-                    <li><i class="fa-solid fa-check-circle"></i> <span><strong>Attendance:</strong> Presenters must be present during the poster session.</span></li>
+                    @for($i = 1; $i <= ($settings['poster_count'] ?? 20); $i++)
+                        @if(!empty($settings['poster_item_' . $i]))
+                            <li><i class="fa-solid fa-check-circle"></i> <span>{!! $settings['poster_item_' . $i] !!}</span></li>
+                        @endif
+                    @endfor
                 </ul>
-                
-                <div class="ag-highlight-box">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                        <i class="fa-solid fa-ruler-combined" style="color: var(--ag-primary);"></i>
-                        <h4 style="margin: 0; color: var(--ag-dark); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Poster Dimensions</h4>
-                    </div>
-                    <p style="margin: 0; color: var(--ag-text); font-size: 1.1rem; font-weight: 600;">90 cm (Width) × 120 cm (Height)</p>
-                </div>
             </div>
         </div>
 
@@ -312,41 +288,25 @@
             <i class="fa-solid fa-book-open ag-pub-watermark"></i>
             
             <div style="text-align: center; position: relative; z-index: 2;">
-                <h3 style="font-size: 2.2rem; font-weight: 800; color: var(--ag-dark); margin-top: 10px; margin-bottom: 20px; letter-spacing: -0.5px;">Scientific Publications</h3>
+                <h3 style="font-size: 2.2rem; font-weight: 800; color: var(--ag-dark); margin-top: 10px; margin-bottom: 20px; letter-spacing: -0.5px;">{{ $settings['pub_title'] ?? 'Scientific Publications' }}</h3>
                 <p style="font-size: 1.1rem; color: var(--ag-text); max-width: 800px; margin: 0 auto; line-height: 1.7;">
-                    Selected peer-reviewed manuscripts will be considered for publication in our partnering international journals and indexed proceedings, offering global visibility for your research.
+                    {{ $settings['pub_desc'] ?? 'Selected peer-reviewed manuscripts will be considered for publication in our partnering international journals and indexed proceedings, offering global visibility for your research.' }}
                 </p>
             </div>
 
             <div class="ag-pub-grid">
-                
-                <!-- Publication 1 -->
-                <div class="ag-pub-card">
-                    <div>
-                        <h4 style="font-size: 1.25rem; font-weight: 800; color: var(--ag-dark); margin: 0 0 10px 0;">Scopus-Indexed Journals</h4>
-                        <p style="margin: 0; font-size: 1rem; color: var(--ag-text); line-height: 1.6;">Manuscripts meeting high academic standards will be recommended for fast-track publication in recognized Scopus-indexed journals.</p>
-                    </div>
-                </div>
-
-                <!-- Publication 2 -->
-                <div class="ag-pub-card">
-                    <div>
-                        <h4 style="font-size: 1.25rem; font-weight: 800; color: var(--ag-dark); margin: 0 0 10px 0;">ISBN Proceedings</h4>
-                        <p style="margin: 0; font-size: 1rem; color: var(--ag-text); line-height: 1.6;">Accepted abstracts and short papers will be compiled and published in official edited conference proceedings with a registered ISBN.</p>
-                    </div>
-                </div>
-
-                <!-- Publication 3 -->
-                <div class="ag-pub-card">
-                    <div>
-                        <h4 style="font-size: 1.25rem; font-weight: 800; color: var(--ag-dark); margin: 0 0 10px 0;">Special Issues</h4>
-                        <p style="margin: 0; font-size: 1rem; color: var(--ag-text); line-height: 1.6;">Exceptional papers may be selected for special thematic issues with partnering international journals, subject to standard peer-review.</p>
-                    </div>
-                </div>
-
+                @for($i = 1; $i <= ($settings['pub_count'] ?? 20); $i++)
+                    @if(!empty($settings['pub_' . $i . '_title']))
+                        <div class="ag-pub-card">
+                            <div>
+                                <h4 style="font-size: 1.25rem; font-weight: 800; color: var(--ag-dark); margin: 0 0 10px 0;">{{ $settings['pub_' . $i . '_title'] }}</h4>
+                                <p style="margin: 0; font-size: 1rem; color: var(--ag-text); line-height: 1.6;">{{ $settings['pub_' . $i . '_desc'] ?? '' }}</p>
+                            </div>
+                        </div>
+                    @endif
+                @endfor
             </div>
         </div>
 
     </div>
 </section>
-

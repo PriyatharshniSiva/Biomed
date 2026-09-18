@@ -30,9 +30,57 @@ Route::get('/setup-db', function () {
         return "Error: " . $e->getMessage();
     }
 });
-Route::get('/submit-paper', function () {
-    return view('submit-paper');
-})->name('submit-paper');
+
+Route::get('/run-migration', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate');
+        return "Migration run successfully!<br>Output:<br>" . nl2br(\Illuminate\Support\Facades\Artisan::output());
+    } catch (\Exception $e) {
+        return "Error: " . $e->getMessage();
+    }
+});
+
+Route::get('/seed-tracks', function () {
+    $tracks = [
+        [
+            'title' => 'Track I: Emerging infectious diseases through a One health lens',
+            'bullet_points' => ['Zoonosis', 'Vector borne diseases', 'Next generation pandemic preparedness', 'Environmental Reservoirs and AMR', 'Molecular Therapeutics and countermeasure innovations', 'Metagenomics in the wild', 'Novel antimicrobials']
+        ],
+        [
+            'title' => 'Track II: Strengthening Health Systems from Theory to Practice: Embedding Social Infrastructure and Public Governance in One Health Capacities',
+            'bullet_points' => ['Institutional Governance & Multi-Sectoral Policy', 'Public health policy and One Health governance', 'Social Infrastructure & Community Resilience', 'Workforce Development & Operational Capacity', 'Addressing Social Determinants of Health', 'Crisis and outbreak management', 'Community-led health equity']
+        ],
+        [
+            'title' => 'Track III: Integrating Environment and Climate change in One Health',
+            'bullet_points' => ['Climate Change and Pathogen Dynamics', 'Biodiversity conservation and Biosecurity', 'Ecosystem resilience', 'Climate change and Environmental health', 'Waste management and circular bioeconomy', 'Mitigating Pollution', 'Sustainable production systems']
+        ],
+        [
+            'title' => 'Track IV: Translating Sustainable Chemistry and Future Technologies to One Health',
+            'bullet_points' => ['Green Chemistry & Eco-Safe Material Design', 'Advanced Technologies for Environmental and Pathogen Remediation', 'Translational Innovation & Regulatory Harmonization', 'One Health and chemical challenges', 'Emerging contaminants and environmental chemistry', 'Sustainable solutions for environmental challenges']
+        ],
+        [
+            'title' => 'Track V: Ensuring health intervention through the Indian Knowledge System',
+            'bullet_points' => ['Traditional Healthcare Systems', 'Ethnomedicine and Community Health Practices', 'Medicinal Plants and Natural Product Research', 'Traditional Food Systems, Nutrition and Functional Foods', 'Biodiversity Conservation and Indigenous Ecological Knowledge', 'Validation of Traditional Knowledge through Modern Science', 'Integrative Medicine and Precision Traditional Therapeutics', 'One Health Perspectives in Indian Knowledge Systems', 'Digital Documentation and Preservation of Indigenous Knowledge', 'Policy, Ethics and Intellectual Property Rights in Traditional Knowledge', 'AI and Omics Approaches for Traditional Medicine Research', 'Translational Research and Commercialization of IKS-based Innovations']
+        ],
+        [
+            'title' => 'Track VI: Regenerative Health: Redefining Industrial One Health Paradigms',
+            'bullet_points' => ['Responsible Pharmaceutical Manufacturing', 'Next-Generation Veterinary Biologics', 'Green Agrochemicals & Biopesticides', 'Corporate Stewardship & Supply Chain Resilience', 'Venture Capital in Planetary Health', 'Cross-Sectoral Commercial Collaboration', 'Integrating comprehensive One Health metrics into Environmental, Social, and Governance (ESG) corporate reporting standards']
+        ]
+    ];
+    
+    \App\Models\Track::truncate();
+    foreach($tracks as $index => $trackData) {
+        \App\Models\Track::create([
+            'title' => $trackData['title'],
+            'bullet_points' => $trackData['bullet_points'],
+            'sort_order' => $index + 1
+        ]);
+    }
+    return "Default tracks have been seeded! You can now visit the /scientific-themes page or the admin CMS to view them.";
+});
+
+//     return view('submit-paper');
+// })->name('submit-paper');
 
 Route::get('/registration', function () {
     $registrationFees = \App\Models\RegistrationFee::where('is_active', true)->orderBy('sort_order')->get();
@@ -42,26 +90,15 @@ Route::get('/registration', function () {
 })->name('registration');
 
 Route::get('/speakers', function () {
-    $plenary = \App\Models\Speaker::where('category', 'plenary')->orderBy('sort_order')->get();
-    $keynote = \App\Models\Speaker::where('category', 'keynote')->orderBy('sort_order')->get();
-    $invited = \App\Models\Speaker::where('category', 'invited')->orderBy('sort_order')->get();
-    return view('speakers', compact('plenary', 'keynote', 'invited'));
+    $keynote = \App\Models\Speaker::where('type', 'keynote')->orderBy('sort_order')->get();
+    $distinguished = \App\Models\Speaker::where('type', 'distinguished')->orderBy('sort_order')->get();
+    return view('speakers', compact('keynote', 'distinguished'));
 })->name('speakers');
-
-Route::get('/plenary-speakers', function () {
-    $speakers = \App\Models\Speaker::where('type', 'plenary')->orderBy('sort_order')->get();
-    return view('plenary-speakers', compact('speakers'));
-})->name('plenary-speakers');
 
 Route::get('/keynote-speakers', function () {
     $speakers = \App\Models\Speaker::where('type', 'keynote')->orderBy('sort_order')->get();
     return view('keynote-speakers', compact('speakers'));
 })->name('keynote-speakers');
-
-Route::get('/invited-speakers', function () {
-    $speakers = \App\Models\Speaker::where('type', 'invited')->orderBy('sort_order')->get();
-    return view('invited-speakers', compact('speakers'));
-})->name('invited-speakers');
 
 Route::get('/distinguished-speakers', function () {
     $speakers = \App\Models\Speaker::where('type', 'distinguished')->orderBy('sort_order')->get();
@@ -75,6 +112,10 @@ Route::get('/committee', function () {
     return view('committee', compact('leadership', 'organizing', 'advisory'));
 })->name('committee');
 
+Route::get('/venue', function () {
+    return view('venue');
+})->name('venue');
+
 Route::get('/about-organizer', function () {
     return view('about-organizer');
 })->name('about-organizer');
@@ -84,7 +125,8 @@ Route::get('/topics', function () {
 })->name('topics');
 
 Route::get('/scientific-themes', function () {
-    return view('scientific-themes');
+    $tracks = \App\Models\Track::orderBy('sort_order')->get();
+    return view('scientific-themes', compact('tracks'));
 })->name('scientific-themes');
 
 Route::get('/guidelines', function () {
@@ -137,6 +179,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // CMS: Hero Section
     Route::get('/hero', [AdminController::class, 'heroSettings'])->name('admin.hero');
     Route::post('/hero', [AdminController::class, 'updateSettings'])->name('admin.hero.update');
+    Route::post('/hero/organizers', [AdminController::class, 'storeHeroOrganizer'])->name('admin.hero.organizers.store');
+    Route::put('/hero/organizers/{id}', [AdminController::class, 'updateHeroOrganizer'])->name('admin.hero.organizers.update');
+    Route::delete('/hero/organizers/{id}', [AdminController::class, 'destroyHeroOrganizer'])->name('admin.hero.organizers.destroy');
+    Route::post('/hero/organizers/reorder', [AdminController::class, 'reorderHeroOrganizers'])->name('admin.hero.organizers.reorder');
 
     // CMS: About Section
     Route::get('/about', [AdminController::class, 'aboutSettings'])->name('admin.about');
@@ -146,13 +192,32 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/conference', [AdminController::class, 'conferenceSettings'])->name('admin.conference');
     Route::post('/conference', [AdminController::class, 'updateSettings'])->name('admin.conference.update');
 
+    // CMS: Conference Objectives Section
+    Route::get('/objectives', [AdminController::class, 'objectivesSettings'])->name('admin.objectives');
+    Route::post('/objectives', [AdminController::class, 'updateObjectivesSettings'])->name('admin.objectives.update');
+
+    // CMS: Who Can Attend (Participants) Section
+    Route::get('/participants', [AdminController::class, 'participantsSettings'])->name('admin.participants');
+    Route::post('/participants', [AdminController::class, 'updateSettings'])->name('admin.participants.update');
+
+    // CMS: Key Expected Outcomes Section
+    Route::get('/outcomes', [AdminController::class, 'outcomesSettings'])->name('admin.outcomes');
+    Route::post('/outcomes', [AdminController::class, 'updateSettings'])->name('admin.outcomes.update');
+
     // CMS: About Organizer Section
     Route::get('/about-organizer', [AdminController::class, 'aboutOrganizerSettings'])->name('admin.about_organizer');
     Route::post('/about-organizer', [AdminController::class, 'updateSettings'])->name('admin.about_organizer.update');
 
     // CMS: Guidelines Section
     Route::get('/guidelines', [AdminController::class, 'guidelinesSettings'])->name('admin.guidelines');
-    Route::post('/guidelines', [AdminController::class, 'updateSettings'])->name('admin.guidelines.update');
+    Route::post('/guidelines', [AdminController::class, 'updateGuidelinesSettings'])->name('admin.guidelines.update');
+
+    // CMS: Event Details (Schedule, Deadlines, Venue)
+    Route::get('/event-details', [AdminController::class, 'eventDetails'])->name('admin.event_details');
+    Route::post('/event-details', [AdminController::class, 'updateEventDetails'])->name('admin.event_details.update');
+    Route::post('/event-details/deadlines', [AdminController::class, 'storeDeadline'])->name('admin.deadlines.store');
+    Route::put('/event-details/deadlines/{id}', [AdminController::class, 'updateDeadline'])->name('admin.deadlines.update');
+    Route::delete('/event-details/deadlines/{id}', [AdminController::class, 'deleteDeadline'])->name('admin.deadlines.delete');
 
     // CMS: Registration Page Content
     Route::get('/settings/registration', [AdminController::class, 'registrationSettings'])->name('admin.settings.registration');
@@ -165,23 +230,23 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // CMS: Programs & Themes (Workshop & Thrust Areas)
     Route::get('/programs', [AdminController::class, 'programsSettings'])->name('admin.programs');
     Route::post('/programs', [AdminController::class, 'updateProgramsSettings'])->name('admin.programs.update');
+    Route::post('/programs/tracks', [AdminController::class, 'storeTrack'])->name('admin.tracks.store');
+    Route::put('/programs/tracks/{id}', [AdminController::class, 'updateTrack'])->name('admin.tracks.update');
+    Route::delete('/programs/tracks/{id}', [AdminController::class, 'destroyTrack'])->name('admin.tracks.destroy');
+
+    // Pillars Settings
+    Route::get('/pillars', [AdminController::class, 'pillarsSettings'])->name('admin.pillars');
+    Route::post('/pillars', [AdminController::class, 'updateSettings'])->name('admin.pillars.update');
 
     // CMS: Abstracts & Awards
     Route::get('/abstracts-awards', [AdminController::class, 'abstractsAwards'])->name('admin.abstracts_awards');
     Route::post('/abstracts-awards', [AdminController::class, 'updateAbstractsAwards'])->name('admin.abstracts_awards.update');
 
-    // CMS: Venue Settings
-    Route::get('/venue-settings', [AdminController::class, 'venueSettings'])->name('admin.venue_settings');
-    Route::post('/venue-settings', [AdminController::class, 'updateVenueSettings'])->name('admin.venue_settings.update');
 
-    // CMS: Homepage Venue Highlights
-    Route::get('/venue-highlights', [AdminController::class, 'venueHighlights'])->name('admin.venue_highlights');
 
-    // CMS: Deadlines
-    Route::get('/deadlines', [AdminController::class, 'deadlines'])->name('admin.deadlines');
-    Route::post('/deadlines', [AdminController::class, 'storeDeadline'])->name('admin.deadlines.store');
-    Route::put('/deadlines/{id}', [AdminController::class, 'updateDeadline'])->name('admin.deadlines.update');
-    Route::delete('/deadlines/{id}', [AdminController::class, 'deleteDeadline'])->name('admin.deadlines.delete');
+    // CMS: Venue
+    Route::get('/venue', [AdminController::class, 'venueSettings'])->name('admin.venue');
+    Route::post('/venue', [AdminController::class, 'updateSettings'])->name('admin.venue.update');
 
     // CMS: Addons
     Route::get('/addons', [AdminController::class, 'addons'])->name('admin.addons');

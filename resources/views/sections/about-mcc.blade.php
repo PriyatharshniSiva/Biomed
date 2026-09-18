@@ -4,8 +4,12 @@
         
         <!-- Header -->
         <div style="text-align: center; margin-bottom: 40px;">
-            <span class="section-subtitle" style="font-weight: bold; color: #009688; text-transform: uppercase; letter-spacing: 1.5px; font-size: 0.9rem;">About The Organizers</span>
-            <h2 class="section-title" style="margin-top: 10px; font-size: 2.2rem; color: #111; font-weight: 800;">Host Institutions & Departments</h2>
+            <span class="section-subtitle" style="font-weight: bold; color: #009688; text-transform: uppercase; letter-spacing: 1.5px; font-size: 0.9rem;">
+                About The Organizers
+            </span>
+            <h2 class="section-title" style="margin-top: 10px; font-size: 2.2rem; color: #111; font-weight: 800;">
+                Host Institution &amp; Departments
+            </h2>
             <div style="width: 60px; height: 4px; background: #009688; margin: 15px auto 0; border-radius: 2px;"></div>
         </div>
 
@@ -13,8 +17,8 @@
         <div class="organizer-dashboard" style="display: flex; gap: 30px; background: #ffffff; border-radius: 24px; box-shadow: 0 15px 50px rgba(0,0,0,0.04); overflow: hidden; border: 1px solid #eaeaea; min-height: 480px;">
             
             <!-- Sidebar Navigation -->
-            <div class="dashboard-sidebar" style="width: 320px; background: #fcfdfe; border-right: 1px solid #f0f0f0; padding: 30px 20px; display: flex; flex-direction: column; gap: 15px; flex-shrink: 0;">
-                <div style="font-size: 0.8rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; padding-left: 10px; margin-bottom: 5px;">Institutions</div>
+            <div class="dashboard-sidebar" style="width: 320px; background: #fcfdfe; border-right: 1px solid #f0f0f0; padding: 30px 20px; display: flex; flex-direction: column; gap: 12px; flex-shrink: 0;">
+                <div style="font-size: 0.8rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; padding-left: 10px; margin-bottom: 5px;">Institution</div>
                 
                 <button class="nav-tab-btn active" onclick="switchOrganizerTab(event, 'tab-mcc')" style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; border: none; background: none; border-radius: 12px; cursor: pointer; text-align: left; transition: all 0.3s ease; width: 100%;">
                     <div class="tab-icon" style="width: 8px; height: 8px; border-radius: 50%; background: #ffffff; transition: all 0.3s ease;"></div>
@@ -23,15 +27,13 @@
                         <div style="font-size: 0.75rem; color: #777; margin-top: 2px;">MCC • Chennai</div>
                     </div>
                 </button>
-                
-
 
                 <div style="font-size: 0.8rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; padding-left: 10px; margin-top: 20px; margin-bottom: 5px;">Departments (MCC)</div>
 
                 <button class="nav-tab-btn" onclick="switchOrganizerTab(event, 'tab-microbiology')" style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; border: none; background: none; border-radius: 12px; cursor: pointer; text-align: left; transition: all 0.3s ease; width: 100%;">
                     <div class="tab-icon" style="width: 8px; height: 8px; border-radius: 50%; background: #ccc; transition: all 0.3s ease;"></div>
                     <div>
-                        <div style="font-weight: 700; font-size: 0.95rem; color: #555;" class="tab-title-text">Dept. of Microbiology</div>
+                        <div style="font-weight: 700; font-size: 0.95rem; color: #555;" class="tab-title-text">Dept. of Microbiology (SFS)</div>
                         <div style="font-size: 0.75rem; color: #777; margin-top: 2px;">Est. 2002 • Research Unit</div>
                     </div>
                 </button>
@@ -46,77 +48,74 @@
             </div>
 
             <!-- Content Area -->
-            <div class="dashboard-content" style="flex-grow: 1; padding: 40px; display: flex; flex-direction: column; justify-content: space-between; background: #ffffff;">
+            <div class="dashboard-content" style="flex-grow: 1; padding: 40px; display: flex; flex-direction: column; justify-content: flex-start; background: #ffffff;">
                 
                 <!-- Tab Panels -->
                 <div>
                     <!-- MCC Panel -->
                     <div id="tab-mcc" class="tab-panel active" style="display: block;">
-                        <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: #009688; font-weight: 700;">Madras Christian College</span>
-                        <h3 style="font-size: 1.8rem; margin: 8px 0 20px; color: #112340; font-weight: 800;">A Legacy of Academic Excellence</h3>
+                        <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: #009688; font-weight: 700;">
+                            Madras Christian College
+                        </span>
+                        <h3 style="font-size: 1.8rem; margin: 8px 0 20px; color: #112340; font-weight: 800;">
+                            A Legacy of Academic Excellence
+                        </h3>
                         
-                        <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-                            <!-- Left Paragraphs -->
-                            <div style="flex: 1.2; min-width: 280px;">
-                                <p style="color: #475569; line-height: 1.75; font-size: 0.98rem; margin-bottom: 18px;">
-                                    Madras Christian College (MCC), established in 1837, is one of India's premier institutions of higher learning with a rich heritage of academic excellence, character formation and nation building.
-                                </p>
-                                <p style="color: #475569; line-height: 1.75; font-size: 0.98rem; margin-bottom: 18px;">
-                                    Affiliated to the University of Madras and accredited with 'A+' Grade by NAAC, MCC offers a vibrant environment for holistic education across disciplines.
-                                </p>
-                                <p style="color: #475569; line-height: 1.75; font-size: 0.98rem; margin-bottom: 0;">
-                                    The Department of Microbiology at MCC has a strong legacy of quality teaching, innovative research and contributions to the advancement of microbial sciences with a focus on societal impact and global relevance.
-                                </p>
-                            </div>
-
-                            <!-- Right Key Highlights List (From Image 2) -->
-                            <div style="flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 14px;">
-                                @php
-                                $mccFeatures = [
-                                    ['title' => 'ESTABLISHED IN 1837',      'sub' => 'A legacy of 185+ years of academic excellence',     'icon' => 'fa-solid fa-landmark'],
-                                    ['title' => "'A+' GRADE BY NAAC",       'sub' => 'Recognized for quality and institutional excellence','icon' => 'fa-solid fa-award'],
-                                    ['title' => 'AUTONOMOUS INSTITUTION',   'sub' => 'Affiliated to the University of Madras',            'icon' => 'fa-solid fa-graduation-cap'],
-                                    ['title' => 'HOLISTIC EDUCATION',       'sub' => 'Nurturing intellect, character and leadership',     'icon' => 'fa-solid fa-users'],
-                                    ['title' => 'RESEARCH & INNOVATION',    'sub' => 'Encouraging impactful research for a better world', 'icon' => 'fa-solid fa-microscope'],
-                                ];
-                                @endphp
-
-                                @foreach($mccFeatures as $feat)
-                                <div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 12px; background: #f8fbfa; border: 1px solid #e8edf3; transition: all 0.25s;"
-                                     onmouseover="this.style.borderColor='#009688'; this.style.background='#f0faf9';"
-                                     onmouseout="this.style.borderColor='#e8edf3'; this.style.background='#f8fbfa';">
-                                    <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(0,150,136,0.12); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                        <i class="{{ $feat['icon'] }}" style="font-size: 1.1rem; color: #009688;"></i>
-                                    </div>
-                                    <div>
-                                        <div style="font-size: 0.85rem; font-weight: 800; color: #112340; letter-spacing: 0.5px;">{{ $feat['title'] }}</div>
-                                        <div style="font-size: 0.78rem; color: #64748b; margin-top: 2px;">{{ $feat['sub'] }}</div>
-                                    </div>
-                                </div>
-                                @endforeach
-                            </div>
+                        <div style="max-width: 800px;">
+                            <p style="color: #475569; line-height: 1.8; font-size: 1.02rem; margin-bottom: 18px; text-align: justify;">
+                                <strong>Madras Christian College (MCC)</strong>, established in 1837, stands as a premier institution of higher learning with a distinguished legacy of 189 years of academic excellence, character formation, and nation-building.
+                            </p>
+                            <p style="color: #475569; line-height: 1.8; font-size: 1.02rem; margin-bottom: 18px; text-align: justify;">
+                                Accredited with an <strong>'A' Grade by NAAC</strong>, MCC is globally recognized for quality and institutional excellence. As an <strong>autonomous institution affiliated to the University of Madras</strong>, MCC offers a vibrant environment for holistic education, nurturing intellect, character, and leadership across diverse disciplines.
+                            </p>
+                            <p style="color: #475569; line-height: 1.8; font-size: 1.02rem; margin-bottom: 0; text-align: justify;">
+                                The college actively fosters <strong>research &amp; innovation</strong>, encouraging faculty and students to undertake impactful, interdisciplinary research for a better world.
+                            </p>
                         </div>
                     </div>
 
-
-
-
                     <!-- Microbiology Panel -->
                     <div id="tab-microbiology" class="tab-panel" style="display: none;">
-                        <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #009688; font-weight: 700;">Madras Christian College</span>
-                        <h3 style="font-size: 1.8rem; margin: 8px 0 20px; color: #222; font-weight: 800;">Department of Microbiology</h3>
-                        <p style="color: #555; line-height: 1.7; font-size: 0.98rem; text-align: justify; margin-bottom: 30px;">
-                            {!! nl2br(e($settings['about_dept'] ?? '')) !!}
-                        </p>
+                        <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: #009688; font-weight: 700;">
+                            Madras Christian College
+                        </span>
+                        <h3 style="font-size: 1.8rem; margin: 8px 0 20px; color: #112340; font-weight: 800;">
+                            Department of Microbiology (SFS)
+                        </h3>
+                        
+                        <div style="max-width: 800px;">
+                            <p style="color: #475569; line-height: 1.8; font-size: 1.02rem; margin-bottom: 18px; text-align: justify;">
+                                The <strong>Department of Microbiology (Self-Financed Stream)</strong> at Madras Christian College was established in 2002 and is committed to excellence in microbiology education, scientific inquiry, and research.
+                            </p>
+                            <p style="color: #475569; line-height: 1.8; font-size: 1.02rem; margin-bottom: 18px; text-align: justify;">
+                                Since 2018, the department has been a full-fledged research unit offering a <strong>Ph.D. programme recognised by the University of Madras</strong> for doctoral research. It is a research-driven department with a strong focus on applied, clinical, food, and industrial microbiology.
+                            </p>
+                            <p style="color: #475569; line-height: 1.8; font-size: 1.02rem; margin-bottom: 0; text-align: justify;">
+                                The department features well-equipped laboratories supported by sophisticated instrumentation and modern research facilities. With a strong emphasis on <strong>student-centred learning</strong>, hands-on training, project work, innovation, and scientific skill development, it prepares graduates for leading roles in academia and industry.
+                            </p>
+                        </div>
                     </div>
 
                     <!-- Chemistry Panel -->
                     <div id="tab-chemistry" class="tab-panel" style="display: none;">
-                        <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #009688; font-weight: 700;">Madras Christian College</span>
-                        <h3 style="font-size: 1.8rem; margin: 8px 0 20px; color: #222; font-weight: 800;">Department of Chemistry (SFS)</h3>
-                        <p style="color: #555; line-height: 1.7; font-size: 0.98rem; text-align: justify; margin-bottom: 30px;">
-                            {!! nl2br(e($settings['about_chemistry'] ?? '')) !!}
-                        </p>
+                        <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: #009688; font-weight: 700;">
+                            Madras Christian College
+                        </span>
+                        <h3 style="font-size: 1.8rem; margin: 8px 0 20px; color: #112340; font-weight: 800;">
+                            Department of Chemistry (SFS)
+                        </h3>
+                        
+                        <div style="max-width: 800px;">
+                            <p style="color: #475569; line-height: 1.8; font-size: 1.02rem; margin-bottom: 18px; text-align: justify;">
+                                The <strong>Department of Chemistry (Self-Financed Stream)</strong> at Madras Christian College was established in 2003, offering high-quality postgraduate education in Chemical Sciences.
+                            </p>
+                            <p style="color: #475569; line-height: 1.8; font-size: 1.02rem; margin-bottom: 18px; text-align: justify;">
+                                The department provides interdisciplinary chemical sciences expertise spanning organic, inorganic, physical, analytical, environmental, and medicinal chemistry. It offers strong laboratory training emphasizing practical skills, experimentation, and scientific methodology.
+                            </p>
+                            <p style="color: #475569; line-height: 1.8; font-size: 1.02rem; margin-bottom: 0; text-align: justify;">
+                                Through its career-oriented education, the department prepares students for higher studies, competitive examinations, teaching, and successful professional careers across chemical and scientific domains.
+                            </p>
+                        </div>
                     </div>
                 </div>
 

@@ -10,6 +10,7 @@ use App\Models\SiteSetting;
 use App\Models\Deadline;
 use App\Models\Addon;
 use App\Models\Policy;
+use App\Models\HeroOrganizer;
 
 class AdminController extends Controller
 {
@@ -115,34 +116,326 @@ class AdminController extends Controller
     {
         $settings = SiteSetting::whereIn('group', ['hero', 'contact'])->get()->groupBy('group');
         $deadlines = Deadline::orderBy('sort_order')->get();
-        return view('admin.hero.index', compact('settings', 'deadlines'));
+        $organizers = HeroOrganizer::orderBy('sort_order')->get();
+        return view('admin.hero.index', compact('settings', 'deadlines', 'organizers'));
+    }
+
+    public function storeHeroOrganizer(Request $request)
+    {
+        $request->validate(['name' => 'required|string|max:255']);
+        $maxOrder = HeroOrganizer::max('sort_order') ?? 0;
+        HeroOrganizer::create([
+            'name' => $request->name,
+            'sort_order' => $maxOrder + 1,
+            'is_active' => true
+        ]);
+        return redirect()->route('admin.hero')->with('success', 'Organizer added successfully.');
+    }
+
+    public function updateHeroOrganizer(Request $request, $id)
+    {
+        $request->validate(['name' => 'required|string|max:255']);
+        $organizer = HeroOrganizer::findOrFail($id);
+        $organizer->update(['name' => $request->name]);
+        return redirect()->route('admin.hero')->with('success', 'Organizer updated successfully.');
+    }
+
+    public function destroyHeroOrganizer($id)
+    {
+        $organizer = HeroOrganizer::findOrFail($id);
+        $organizer->delete();
+        return redirect()->route('admin.hero')->with('success', 'Organizer deleted successfully.');
+    }
+
+    public function reorderHeroOrganizers(Request $request)
+    {
+        $request->validate(['order' => 'required|array']);
+        foreach ($request->order as $index => $id) {
+            HeroOrganizer::where('id', $id)->update(['sort_order' => $index]);
+        }
+        return response()->json(['success' => true]);
     }
 
     // CMS: About Section Settings
     public function aboutSettings()
     {
-        $settings = SiteSetting::where('group', 'about')->get()->groupBy('group');
+        $settings = SiteSetting::where('group', 'about')->pluck('value', 'key')->all();
         return view('admin.about.index', compact('settings'));
+    }
+
+    // CMS: Conference Objectives & Framework Settings
+    public function objectivesSettings()
+    {
+        $settings = SiteSetting::whereIn('group', ['objectives', 'participants', 'outcomes', 'journey'])->pluck('value', 'key')->all();
+        return view('admin.objectives.index', compact('settings'));
+    }
+
+    public function updateObjectivesSettings(Request $request)
+    {
+        // 1. Objectives Section Title
+        if ($request->has('objectives_section_title')) {
+            SiteSetting::updateOrCreate(['key' => 'objectives_section_title'], ['value' => $request->objectives_section_title, 'group' => 'objectives']);
+        }
+        
+        // Save Objective Cards
+        if ($request->has('obj_titles')) {
+            SiteSetting::where('group', 'objectives')->where(function($q) {
+                $q->where('key', 'like', 'obj\_%\_title')->orWhere('key', 'like', 'obj\_%\_desc')->orWhere('key', 'like', 'obj\_%\_icon');
+            })->delete();
+            
+            $titles = $request->input('obj_titles', []);
+            $icons = $request->input('obj_icons', []);
+            $descs = $request->input('obj_descs', []);
+            
+            $count = 0;
+            foreach ($titles as $idx => $title) {
+                if (!empty($title)) {
+                    $count++;
+                    SiteSetting::updateOrCreate(['key' => "obj_{$count}_title"], ['value' => $title, 'group' => 'objectives']);
+                    SiteSetting::updateOrCreate(['key' => "obj_{$count}_icon"], ['value' => $icons[$idx] ?? 'fa-solid fa-check', 'group' => 'objectives']);
+                    SiteSetting::updateOrCreate(['key' => "obj_{$count}_desc"], ['value' => $descs[$idx] ?? '', 'group' => 'objectives']);
+                }
+            }
+            SiteSetting::updateOrCreate(['key' => 'objectives_count'], ['value' => $count, 'group' => 'objectives']);
+        }
+
+        // 2. Who Can Attend (Participants)
+        if ($request->has('part_tag')) SiteSetting::updateOrCreate(['key' => 'part_tag'], ['value' => $request->part_tag, 'group' => 'participants']);
+        if ($request->has('part_title')) SiteSetting::updateOrCreate(['key' => 'part_title'], ['value' => $request->part_title, 'group' => 'participants']);
+        if ($request->has('part_sub')) SiteSetting::updateOrCreate(['key' => 'part_sub'], ['value' => $request->part_sub, 'group' => 'participants']);
+
+        if ($request->has('part_labels')) {
+            SiteSetting::where('group', 'participants')->where(function($q) {
+                $q->where('key', 'like', 'part\_%\_label')->orWhere('key', 'like', 'part\_%\_icon');
+            })->delete();
+            $labels = $request->input('part_labels', []);
+            $icons = $request->input('part_icons', []);
+            $count = 0;
+            foreach ($labels as $idx => $label) {
+                if (!empty($label)) {
+                    $count++;
+                    SiteSetting::updateOrCreate(['key' => "part_{$count}_label"], ['value' => $label, 'group' => 'participants']);
+                    SiteSetting::updateOrCreate(['key' => "part_{$count}_icon"], ['value' => $icons[$idx] ?? 'fa-solid fa-user', 'group' => 'participants']);
+                }
+            }
+            SiteSetting::updateOrCreate(['key' => 'participants_count'], ['value' => $count, 'group' => 'participants']);
+        }
+
+        // 3. Key Expected Outcomes
+        if ($request->has('outcomes_title')) SiteSetting::updateOrCreate(['key' => 'outcomes_title'], ['value' => $request->outcomes_title, 'group' => 'outcomes']);
+        if ($request->has('outcomes_sub')) SiteSetting::updateOrCreate(['key' => 'outcomes_sub'], ['value' => $request->outcomes_sub, 'group' => 'outcomes']);
+
+        if ($request->has('out_titles')) {
+            SiteSetting::where('group', 'outcomes')->where(function($q) {
+                $q->where('key', 'like', 'out\_%\_title')->orWhere('key', 'like', 'out\_%\_tag')->orWhere('key', 'like', 'out\_%\_icon');
+            })->delete();
+            $tags = $request->input('out_tags', []);
+            $icons = $request->input('out_icons', []);
+            $titles = $request->input('out_titles', []);
+            $count = 0;
+            foreach ($titles as $idx => $title) {
+                if (!empty($title)) {
+                    $count++;
+                    SiteSetting::updateOrCreate(['key' => "out_{$count}_tag"], ['value' => $tags[$idx] ?? 'Outcome', 'group' => 'outcomes']);
+                    SiteSetting::updateOrCreate(['key' => "out_{$count}_icon"], ['value' => $icons[$idx] ?? 'fa-solid fa-check', 'group' => 'outcomes']);
+                    SiteSetting::updateOrCreate(['key' => "out_{$count}_title"], ['value' => $title, 'group' => 'outcomes']);
+                }
+            }
+            SiteSetting::updateOrCreate(['key' => 'outcomes_count'], ['value' => $count, 'group' => 'outcomes']);
+        }
+
+        // 4. Our Journey to Impact
+        if ($request->has('journey_title')) SiteSetting::updateOrCreate(['key' => 'journey_title'], ['value' => $request->journey_title, 'group' => 'journey']);
+        if ($request->has('journey_sub')) SiteSetting::updateOrCreate(['key' => 'journey_sub'], ['value' => $request->journey_sub, 'group' => 'journey']);
+
+        if ($request->has('journey_titles')) {
+            SiteSetting::where('group', 'journey')->where(function($q) {
+                $q->where('key', 'like', 'journey\_%\_title')->orWhere('key', 'like', 'journey\_%\_desc');
+            })->delete();
+            $titles = $request->input('journey_titles', []);
+            $descs = $request->input('journey_descs', []);
+            $count = 0;
+            foreach ($titles as $idx => $title) {
+                if (!empty($title)) {
+                    $count++;
+                    SiteSetting::updateOrCreate(['key' => "journey_{$count}_title"], ['value' => $title, 'group' => 'journey']);
+                    SiteSetting::updateOrCreate(['key' => "journey_{$count}_desc"], ['value' => $descs[$idx] ?? '', 'group' => 'journey']);
+                }
+            }
+            SiteSetting::updateOrCreate(['key' => 'journey_count'], ['value' => $count, 'group' => 'journey']);
+        }
+
+        return back()->with('success', 'Conference Objectives and Strategic Framework updated successfully.');
+    }
+
+    // CMS: Who Can Attend (Participants) Settings
+    public function participantsSettings()
+    {
+        $settings = SiteSetting::where('group', 'participants')->pluck('value', 'key')->all();
+        return view('admin.participants.index', compact('settings'));
+    }
+
+    // CMS: Key Expected Outcomes Settings
+    public function outcomesSettings()
+    {
+        $settings = SiteSetting::where('group', 'outcomes')->pluck('value', 'key')->all();
+        return view('admin.outcomes.index', compact('settings'));
     }
 
     // CMS: About Organizer Settings
     public function aboutOrganizerSettings()
     {
-        $settings = SiteSetting::where('group', 'about_organizer')->get()->groupBy('group');
+        $settings = SiteSetting::where('group', 'about_organizer')->pluck('value', 'key')->all();
         return view('admin.about_organizer.index', compact('settings'));
     }
 
     // CMS: Guidelines Settings
     public function guidelinesSettings()
     {
-        $settings = SiteSetting::where('group', 'guidelines')->get()->groupBy('group');
+        $settings = SiteSetting::where('group', 'guidelines')->pluck('value', 'key')->all();
         return view('admin.guidelines.index', compact('settings'));
+    }
+
+    public function updateGuidelinesSettings(Request $request)
+    {
+        // Section titles & static fields
+        if ($request->has('abstract_tag')) SiteSetting::updateOrCreate(['key' => 'abstract_tag'], ['value' => $request->abstract_tag, 'group' => 'guidelines']);
+        if ($request->has('abstract_title')) SiteSetting::updateOrCreate(['key' => 'abstract_title'], ['value' => $request->abstract_title, 'group' => 'guidelines']);
+        if ($request->has('oral_title')) SiteSetting::updateOrCreate(['key' => 'oral_title'], ['value' => $request->oral_title, 'group' => 'guidelines']);
+        if ($request->has('poster_title')) SiteSetting::updateOrCreate(['key' => 'poster_title'], ['value' => $request->poster_title, 'group' => 'guidelines']);
+        if ($request->has('poster_dim_label')) SiteSetting::updateOrCreate(['key' => 'poster_dim_label'], ['value' => $request->poster_dim_label, 'group' => 'guidelines']);
+        if ($request->has('poster_dim_val')) SiteSetting::updateOrCreate(['key' => 'poster_dim_val'], ['value' => $request->poster_dim_val, 'group' => 'guidelines']);
+        if ($request->has('pub_title')) SiteSetting::updateOrCreate(['key' => 'pub_title'], ['value' => $request->pub_title, 'group' => 'guidelines']);
+        if ($request->has('pub_desc')) SiteSetting::updateOrCreate(['key' => 'pub_desc'], ['value' => $request->pub_desc, 'group' => 'guidelines']);
+
+        // 1. Abstract Bullet Items
+        if ($request->has('abstract_items')) {
+            SiteSetting::where('group', 'guidelines')->where('key', 'like', 'abstract\_item\_%')->delete();
+            $items = $request->input('abstract_items', []);
+            $count = 0;
+            foreach ($items as $item) {
+                if (!empty($item)) {
+                    $count++;
+                    SiteSetting::updateOrCreate(['key' => "abstract_item_{$count}"], ['value' => $item, 'group' => 'guidelines']);
+                }
+            }
+            SiteSetting::updateOrCreate(['key' => 'abstract_count'], ['value' => $count, 'group' => 'guidelines']);
+        }
+
+        // 2. Oral Bullet Items
+        if ($request->has('oral_items')) {
+            SiteSetting::where('group', 'guidelines')->where('key', 'like', 'oral\_item\_%')->delete();
+            $items = $request->input('oral_items', []);
+            $count = 0;
+            foreach ($items as $item) {
+                if (!empty($item)) {
+                    $count++;
+                    SiteSetting::updateOrCreate(['key' => "oral_item_{$count}"], ['value' => $item, 'group' => 'guidelines']);
+                }
+            }
+            SiteSetting::updateOrCreate(['key' => 'oral_count'], ['value' => $count, 'group' => 'guidelines']);
+        }
+
+        // 3. Poster Bullet Items
+        if ($request->has('poster_items')) {
+            SiteSetting::where('group', 'guidelines')->where('key', 'like', 'poster\_item\_%')->delete();
+            $items = $request->input('poster_items', []);
+            $count = 0;
+            foreach ($items as $item) {
+                if (!empty($item)) {
+                    $count++;
+                    SiteSetting::updateOrCreate(['key' => "poster_item_{$count}"], ['value' => $item, 'group' => 'guidelines']);
+                }
+            }
+            SiteSetting::updateOrCreate(['key' => 'poster_count'], ['value' => $count, 'group' => 'guidelines']);
+        }
+
+        // 4. Scientific Publication Cards
+        if ($request->has('pub_titles')) {
+            SiteSetting::where('group', 'guidelines')->where(function($q) {
+                $q->where('key', 'like', 'pub\_%\_title')->orWhere('key', 'like', 'pub\_%\_desc');
+            })->delete();
+            $titles = $request->input('pub_titles', []);
+            $descs = $request->input('pub_descs', []);
+            $count = 0;
+            foreach ($titles as $idx => $title) {
+                if (!empty($title)) {
+                    $count++;
+                    SiteSetting::updateOrCreate(['key' => "pub_{$count}_title"], ['value' => $title, 'group' => 'guidelines']);
+                    SiteSetting::updateOrCreate(['key' => "pub_{$count}_desc"], ['value' => $descs[$idx] ?? '', 'group' => 'guidelines']);
+                }
+            }
+            SiteSetting::updateOrCreate(['key' => 'pub_count'], ['value' => $count, 'group' => 'guidelines']);
+        }
+
+        return back()->with('success', 'Guidelines updated successfully.');
+    }
+
+    // CMS: Programme Schedule Settings
+    public function scheduleSettings()
+    {
+        $settings = SiteSetting::where('group', 'schedule')->pluck('value', 'key')->all();
+        return view('admin.schedule.index', compact('settings'));
+    }
+
+    public function updateScheduleSettings(Request $request)
+    {
+        if ($request->has('sched_title')) SiteSetting::updateOrCreate(['key' => 'sched_title'], ['value' => $request->sched_title, 'group' => 'schedule']);
+        if ($request->has('sched_sub')) SiteSetting::updateOrCreate(['key' => 'sched_sub'], ['value' => $request->sched_sub, 'group' => 'schedule']);
+        if ($request->has('sched_day1_title')) SiteSetting::updateOrCreate(['key' => 'sched_day1_title'], ['value' => $request->sched_day1_title, 'group' => 'schedule']);
+        if ($request->has('sched_day1_time')) SiteSetting::updateOrCreate(['key' => 'sched_day1_time'], ['value' => $request->sched_day1_time, 'group' => 'schedule']);
+        if ($request->has('sched_day2_title')) SiteSetting::updateOrCreate(['key' => 'sched_day2_title'], ['value' => $request->sched_day2_title, 'group' => 'schedule']);
+        if ($request->has('sched_day2_time')) SiteSetting::updateOrCreate(['key' => 'sched_day2_time'], ['value' => $request->sched_day2_time, 'group' => 'schedule']);
+        if ($request->has('sched_tracks_title')) SiteSetting::updateOrCreate(['key' => 'sched_tracks_title'], ['value' => $request->sched_tracks_title, 'group' => 'schedule']);
+        if ($request->has('sched_tracks_sub')) SiteSetting::updateOrCreate(['key' => 'sched_tracks_sub'], ['value' => $request->sched_tracks_sub, 'group' => 'schedule']);
+
+        // Day 1 Rows
+        if ($request->has('day1_titles')) {
+            SiteSetting::where('group', 'schedule')->where('key', 'like', 'day1\_%\_%')->delete();
+            $times = $request->input('day1_times', []);
+            $titles = $request->input('day1_titles', []);
+            $badges = $request->input('day1_badges', []);
+            $icons = $request->input('day1_icons', []);
+            $count = 0;
+            foreach ($titles as $idx => $title) {
+                if (!empty($title)) {
+                    $count++;
+                    SiteSetting::updateOrCreate(['key' => "day1_{$count}_time"], ['value' => $times[$idx] ?? '', 'group' => 'schedule']);
+                    SiteSetting::updateOrCreate(['key' => "day1_{$count}_title"], ['value' => $title, 'group' => 'schedule']);
+                    SiteSetting::updateOrCreate(['key' => "day1_{$count}_badge"], ['value' => $badges[$idx] ?? '', 'group' => 'schedule']);
+                    SiteSetting::updateOrCreate(['key' => "day1_{$count}_icon"], ['value' => $icons[$idx] ?? 'fa-clock', 'group' => 'schedule']);
+                }
+            }
+            SiteSetting::updateOrCreate(['key' => 'day1_count'], ['value' => $count, 'group' => 'schedule']);
+        }
+
+        // Day 2 Rows
+        if ($request->has('day2_titles')) {
+            SiteSetting::where('group', 'schedule')->where('key', 'like', 'day2\_%\_%')->delete();
+            $times = $request->input('day2_times', []);
+            $titles = $request->input('day2_titles', []);
+            $badges = $request->input('day2_badges', []);
+            $icons = $request->input('day2_icons', []);
+            $count = 0;
+            foreach ($titles as $idx => $title) {
+                if (!empty($title)) {
+                    $count++;
+                    SiteSetting::updateOrCreate(['key' => "day2_{$count}_time"], ['value' => $times[$idx] ?? '', 'group' => 'schedule']);
+                    SiteSetting::updateOrCreate(['key' => "day2_{$count}_title"], ['value' => $title, 'group' => 'schedule']);
+                    SiteSetting::updateOrCreate(['key' => "day2_{$count}_badge"], ['value' => $badges[$idx] ?? '', 'group' => 'schedule']);
+                    SiteSetting::updateOrCreate(['key' => "day2_{$count}_icon"], ['value' => $icons[$idx] ?? 'fa-clock', 'group' => 'schedule']);
+                }
+            }
+            SiteSetting::updateOrCreate(['key' => 'day2_count'], ['value' => $count, 'group' => 'schedule']);
+        }
+
+        return back()->with('success', 'Programme Schedule settings updated successfully.');
     }
 
     // CMS: Conference Section Settings
     public function conferenceSettings()
     {
-        $settings = SiteSetting::whereIn('group', ['conference', 'participants'])->get()->groupBy('group');
+        $settings = SiteSetting::whereIn('group', ['conference', 'objectives', 'participants'])->get()->groupBy('group');
         return view('admin.conference.index', compact('settings'));
     }
 
@@ -158,15 +451,25 @@ class AdminController extends Controller
             } elseif ($value === null && SiteSetting::where('key', $key)->value('type') === 'image') {
                 continue;
             }
-            SiteSetting::where('key', $key)->update(['value' => $value]);
+            SiteSetting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $value]
+            );
         }
         return back()->with('success', 'Settings updated successfully.');
+    }
+
+    // CMS: Pillars Settings
+    public function pillarsSettings()
+    {
+        $settings = SiteSetting::whereIn('group', ['pillars'])->get()->groupBy('group');
+        return view('admin.pillars.index', compact('settings'));
     }
 
     // CMS: Registration Page Settings
     public function registrationSettings()
     {
-        $settings = SiteSetting::whereIn('group', ['registration', 'reg_fields'])->get()->groupBy('group');
+        $settings = SiteSetting::pluck('value', 'key')->all();
         $interestOptions = \App\Models\InterestOption::orderBy('sort_order')->get();
         $policies = \App\Models\Policy::orderBy('sort_order')->get();
         return view('admin.settings.registration', compact('settings', 'interestOptions', 'policies'));
@@ -174,10 +477,25 @@ class AdminController extends Controller
 
     public function updateRegistrationSettings(Request $request)
     {
-        $data = $request->except('_token');
-        foreach ($data as $key => $value) {
-            SiteSetting::where('key', $key)->update(['value' => $value]);
+        if ($request->has('reg_section_title')) SiteSetting::updateOrCreate(['key' => 'reg_section_title'], ['value' => $request->reg_section_title, 'group' => 'registration']);
+        if ($request->has('reg_section_sub')) SiteSetting::updateOrCreate(['key' => 'reg_section_sub'], ['value' => $request->reg_section_sub, 'group' => 'registration']);
+        if ($request->has('reg_proc_title')) SiteSetting::updateOrCreate(['key' => 'reg_proc_title'], ['value' => $request->reg_proc_title, 'group' => 'registration']);
+        if ($request->has('reg_proc_sub')) SiteSetting::updateOrCreate(['key' => 'reg_proc_sub'], ['value' => $request->reg_proc_sub, 'group' => 'registration']);
+        if ($request->has('reg_proc_heading')) SiteSetting::updateOrCreate(['key' => 'reg_proc_heading'], ['value' => $request->reg_proc_heading, 'group' => 'registration']);
+
+        if ($request->has('reg_steps')) {
+            SiteSetting::where('group', 'registration')->where('key', 'like', 'reg\_step\_%')->delete();
+            $steps = $request->input('reg_steps', []);
+            $count = 0;
+            foreach ($steps as $step) {
+                if (!empty($step)) {
+                    $count++;
+                    SiteSetting::updateOrCreate(['key' => "reg_step_{$count}"], ['value' => $step, 'group' => 'registration']);
+                }
+            }
+            SiteSetting::updateOrCreate(['key' => 'reg_step_count'], ['value' => $count, 'group' => 'registration']);
         }
+
         return back()->with('success', 'Registration settings updated successfully.');
     }
 
@@ -202,7 +520,8 @@ class AdminController extends Controller
     public function programsSettings()
     {
         $settings = SiteSetting::whereIn('group', ['workshop', 'thrust_areas'])->get()->groupBy('group');
-        return view('admin.programs.index', compact('settings'));
+        $tracks = \App\Models\Track::orderBy('sort_order')->get();
+        return view('admin.programs.index', compact('settings', 'tracks'));
     }
 
     public function updateProgramsSettings(Request $request)
@@ -223,6 +542,52 @@ class AdminController extends Controller
             SiteSetting::where('key', $key)->update(['value' => $value]);
         }
         return back()->with('success', 'Programs & Themes updated successfully.');
+    }
+
+    public function storeTrack(Request $request)
+    {
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'sort_order' => 'integer',
+            'bullet_points' => 'nullable|array'
+        ]);
+
+        // Filter out empty bullet points
+        if (isset($data['bullet_points'])) {
+            $data['bullet_points'] = array_filter($data['bullet_points'], fn($val) => !empty(trim($val)));
+            $data['bullet_points'] = array_values($data['bullet_points']);
+        } else {
+            $data['bullet_points'] = [];
+        }
+
+        \App\Models\Track::create($data);
+        return back()->with('success', 'Track created successfully.');
+    }
+
+    public function updateTrack(Request $request, $id)
+    {
+        $track = \App\Models\Track::findOrFail($id);
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'sort_order' => 'integer',
+            'bullet_points' => 'nullable|array'
+        ]);
+
+        if (isset($data['bullet_points'])) {
+            $data['bullet_points'] = array_filter($data['bullet_points'], fn($val) => !empty(trim($val)));
+            $data['bullet_points'] = array_values($data['bullet_points']);
+        } else {
+            $data['bullet_points'] = [];
+        }
+
+        $track->update($data);
+        return back()->with('success', 'Track updated successfully.');
+    }
+
+    public function destroyTrack($id)
+    {
+        \App\Models\Track::findOrFail($id)->delete();
+        return back()->with('success', 'Track deleted successfully.');
     }
 
     // CMS: Abstracts & Awards
@@ -539,7 +904,7 @@ class AdminController extends Controller
 
     public function speakers(Request $request)
     {
-        $type = $request->query('type', 'plenary'); // Default to plenary
+        $type = $request->query('type', 'keynote'); // Default to keynote
         $speakers = \App\Models\Speaker::where('type', $type)->orderBy('sort_order')->get();
         return view('admin.speakers.index', compact('speakers', 'type'));
     }
@@ -547,7 +912,7 @@ class AdminController extends Controller
     public function storeSpeaker(Request $request)
     {
         $data = $request->validate([
-            'type' => 'required|string|in:plenary,keynote,invited',
+            'type' => 'required|string|in:keynote,distinguished',
             'name' => 'required|string|max:255',
             'h_index' => 'nullable|string|max:50',
             'university' => 'required|string|max:255',
@@ -572,7 +937,7 @@ class AdminController extends Controller
         $speaker = \App\Models\Speaker::findOrFail($id);
         
         $data = $request->validate([
-            'type' => 'required|string|in:plenary,keynote,invited',
+            'type' => 'required|string|in:keynote,distinguished',
             'name' => 'required|string|max:255',
             'h_index' => 'nullable|string|max:50',
             'university' => 'required|string|max:255',
@@ -856,17 +1221,39 @@ class AdminController extends Controller
     // --- Awards CMS ---
     public function awards()
     {
-        $settings = \App\Models\SiteSetting::where('group', 'awards_page')->get()->groupBy('group');
+        $settings = \App\Models\SiteSetting::whereIn('group', ['awards_page', 'awards'])->pluck('value', 'key')->all();
         $awards = \App\Models\Award::orderBy('sort_order')->get();
         return view('admin.awards.index', compact('settings', 'awards'));
     }
 
     public function updateAwardsSettings(Request $request)
     {
-        $data = $request->except('_token');
-        foreach ($data as $key => $value) {
-            \App\Models\SiteSetting::updateOrCreate(['key' => $key, 'group' => 'awards_page'], ['value' => $value]);
+        if ($request->has('awards_section_title')) \App\Models\SiteSetting::updateOrCreate(['key' => 'awards_section_title'], ['value' => $request->awards_section_title, 'group' => 'awards_page']);
+        if ($request->has('awards_section_sub')) \App\Models\SiteSetting::updateOrCreate(['key' => 'awards_section_sub'], ['value' => $request->awards_section_sub, 'group' => 'awards_page']);
+        if ($request->has('awards_footer_icon')) \App\Models\SiteSetting::updateOrCreate(['key' => 'awards_footer_icon'], ['value' => $request->awards_footer_icon, 'group' => 'awards_page']);
+        if ($request->has('awards_footer_note')) \App\Models\SiteSetting::updateOrCreate(['key' => 'awards_footer_note'], ['value' => $request->awards_footer_note, 'group' => 'awards_page']);
+
+        if ($request->has('award_titles')) {
+            \App\Models\SiteSetting::where('group', 'awards_page')->where(function($q) {
+                $q->where('key', 'like', 'award\_%\_title')->orWhere('key', 'like', 'award\_%\_amount')->orWhere('key', 'like', 'award\_%\_icon');
+            })->delete();
+
+            $titles = $request->input('award_titles', []);
+            $amounts = $request->input('award_amounts', []);
+            $icons = $request->input('award_icons', []);
+
+            $count = 0;
+            foreach ($titles as $idx => $title) {
+                if (!empty($title)) {
+                    $count++;
+                    \App\Models\SiteSetting::updateOrCreate(['key' => "award_{$count}_title"], ['value' => $title, 'group' => 'awards_page']);
+                    \App\Models\SiteSetting::updateOrCreate(['key' => "award_{$count}_amount"], ['value' => $amounts[$idx] ?? '', 'group' => 'awards_page']);
+                    \App\Models\SiteSetting::updateOrCreate(['key' => "award_{$count}_icon"], ['value' => $icons[$idx] ?? 'fa-solid fa-award', 'group' => 'awards_page']);
+                }
+            }
+            \App\Models\SiteSetting::updateOrCreate(['key' => 'awards_count'], ['value' => $count, 'group' => 'awards_page']);
         }
+
         return back()->with('success', 'Awards settings updated successfully.');
     }
 
@@ -910,4 +1297,47 @@ class AdminController extends Controller
         \App\Models\Award::findOrFail($id)->delete();
         return back()->with('success', 'Award deleted successfully.');
     }
+
+    // CMS: Event Details (Schedule, Deadlines, Venue)
+    public function eventDetails()
+    {
+        $groupedSettings = \App\Models\SiteSetting::whereIn('group', ['venue', 'deadlines'])->get()->groupBy('group');
+        $settings = \App\Models\SiteSetting::whereIn('group', ['venue', 'schedule', 'deadlines'])->pluck('value', 'key');
+        
+        // Inject the grouped collections so views expecting them (venue, deadlines) don't break
+        $settings['venue'] = $groupedSettings->get('venue', collect([]));
+        $settings['deadlines'] = $groupedSettings->get('deadlines', collect([]));
+
+        $deadlines = \App\Models\Deadline::orderBy('sort_order')->get();
+        return view('admin.event_details.index', compact('settings', 'deadlines'));
+    }
+
+    public function updateEventDetails(Request $request)
+    {
+        $data = $request->except('_token');
+        foreach ($data as $key => $value) {
+            if (str_ends_with($key, '_file')) {
+                if ($request->hasFile($key)) {
+                    $originalKey = str_replace('_file', '', $key);
+                    $file = $request->file($key);
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    $file->move(public_path('images/event'), $fileName);
+                    \App\Models\SiteSetting::updateOrCreate(
+                        ['key' => $originalKey],
+                        ['value' => 'images/event/' . $fileName, 'group' => 'venue']
+                    );
+                }
+                continue;
+            }
+            
+            // Assume schedule settings starts with sched_ or day1_ or day2_
+            $group = (str_starts_with($key, 'sched_') || str_starts_with($key, 'day1_') || str_starts_with($key, 'day2_')) ? 'schedule' : 'venue';
+            \App\Models\SiteSetting::updateOrCreate(
+                ['key' => $key],
+                ['value' => is_array($value) ? json_encode($value) : $value, 'group' => $group]
+            );
+        }
+        return back()->with('success', 'Event Details updated successfully.');
+    }
+
 }

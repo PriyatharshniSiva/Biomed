@@ -30,5 +30,9 @@ class AppServiceProvider extends ServiceProvider
             $deadlines = \App\Models\Deadline::where('is_active', true)->orderBy('sort_order')->get();
             View::share('deadlines', $deadlines);
         }
+        if (\Schema::hasTable('hero_organizers')) {
+            $organizers = \App\Models\HeroOrganizer::where('is_active', true)->orderBy('sort_order')->get();
+            View::share('organizers', $organizers);
+        }
     }
 }

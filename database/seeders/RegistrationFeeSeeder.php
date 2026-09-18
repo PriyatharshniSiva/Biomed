@@ -15,7 +15,8 @@ class RegistrationFeeSeeder extends Seeder
 
         RegistrationFee::create([
             'category_name' => 'Student',
-            'price_inr' => '500',
+            'price_inr' => '1000',
+            'price_online' => '1500',
             'price_usd' => null,
             'features' => json_encode(['Registration includes conference kit, certificate, lunch and refreshment.']),
             'is_active' => true,
@@ -25,7 +26,8 @@ class RegistrationFeeSeeder extends Seeder
 
         RegistrationFee::create([
             'category_name' => 'Research Scholar',
-            'price_inr' => '750',
+            'price_inr' => '1500',
+            'price_online' => '2000',
             'price_usd' => null,
             'features' => json_encode(['Registration includes conference kit, certificate, lunch and refreshment.']),
             'is_active' => true,
@@ -35,7 +37,8 @@ class RegistrationFeeSeeder extends Seeder
 
         RegistrationFee::create([
             'category_name' => 'Faculty/Scientist',
-            'price_inr' => '1500',
+            'price_inr' => '2000',
+            'price_online' => '3000',
             'price_usd' => null,
             'features' => json_encode(['Registration includes conference kit, certificate, lunch and refreshment.']),
             'is_active' => true,
@@ -45,7 +48,8 @@ class RegistrationFeeSeeder extends Seeder
 
         RegistrationFee::create([
             'category_name' => 'Industrialists',
-            'price_inr' => '2000',
+            'price_inr' => '5000',
+            'price_online' => '5000',
             'price_usd' => null,
             'features' => json_encode(['Registration includes conference kit, certificate, lunch and refreshment.']),
             'is_active' => true,

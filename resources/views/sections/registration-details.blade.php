@@ -8,95 +8,163 @@
         
         <!-- Centered Header -->
         <div class="section-header-center" style="text-align: center; margin-bottom: 30px;">
-            <h2 class="section-title" style="margin-top: 0; margin-bottom: 12px; color: #ffffff; font-weight: 800; line-height: 1.2; white-space: nowrap;">Registration <span style="color: #4fd1c5;">Plans</span></h2>
+            <h2 class="section-title" style="margin-top: 0; margin-bottom: 12px; color: #ffffff; font-weight: 800; line-height: 1.2; white-space: nowrap;">{{ $settings['reg_section_title'] ?? 'Registration Plans' }}</h2>
             <div class="header-line" style="width: 60px; height: 4px; background-color: #4fd1c5; margin: 0 auto 15px auto;"></div>
             <p class="participants-desc" style="max-width: 700px; margin: 0 auto; color: #94a3b8 !important;">
-                Choose the appropriate registration tier to access the conference. Super early-bird rates are currently active.
+                {{ $settings['reg_section_sub'] ?? 'Choose the appropriate registration tier to access the conference. Super early-bird rates are currently active.' }}
             </p>
+        </div>
+
+        <!-- Registration Process -->
+        <div class="registration-process" style="background-color: #f0f7fa; color: #1e3250; padding: 35px 40px; border-radius: 12px; margin-bottom: 50px; max-width: 900px; margin-left: auto; margin-right: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.15); position: relative; z-index: 2;">
+            <h3 style="text-align: center; color: #1e3250; margin-top: 0; font-size: 1.35rem; font-weight: 700; margin-bottom: 10px;">{{ $settings['reg_proc_title'] ?? 'Registration Process of GOHC - 2026' }}</h3>
+            <p style="text-align: center; font-size: 1.05rem; margin-bottom: 25px; color: #1e3250;">{{ $settings['reg_proc_sub'] ?? 'Participation in GOHC 2026 is open only to registered delegates..' }}</p>
+            
+            <h4 style="text-align: center; color: #1e3250; font-size: 1.15rem; font-weight: 700; margin-bottom: 20px;">{{ $settings['reg_proc_heading'] ?? 'Steps for Conference Registration' }}</h4>
+            
+            <ul style="list-style-type: none; padding: 0; margin: 0;">
+                @for($i = 1; $i <= 5; $i++)
+                    @if(!empty($settings['reg_step_' . $i]))
+                    <li style="margin-bottom: 15px; font-size: 1.05rem; font-style: italic; display: flex; align-items: flex-start; line-height: 1.5;">
+                        <span style="color: #1e3250; font-weight: bold; font-style: normal; margin-right: 8px;">*</span> 
+                        <span>{{ $settings['reg_step_' . $i] }}</span>
+                    </li>
+                    @endif
+                @endfor
+            </ul>
         </div>
 
         <!-- 4-Column Pricing Grid -->
         <div class="pricing-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; margin-bottom: 60px; max-width: 1200px; margin: 0 auto;">
             
-            @if(isset($registrationFees) && count($registrationFees) > 0)
-                @foreach($registrationFees as $fee)
-                    @if($fee->is_highlighted)
-                        <!-- Highlighted Card -->
-                        <div class="pricing-card featured-card" style="background-color: #1e293b; border: 2px solid #4fd1c5; border-radius: 20px; padding: 40px 30px 30px 30px; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 30px rgba(79, 209, 197, 0.15); z-index: 2; text-align: center; overflow: visible;">
-                            <div class="pricing-badge" style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, #009688, #4fd1c5); color: #fff; padding: 6px 20px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">Most Popular</div>
-                            
-                            <h3 class="pricing-title" style="margin: 0 0 16px 0; color: #4fd1c5; font-size: 1.25rem; font-weight: 700;">{{ $fee->category_name }}</h3>
-                            
-                            {{-- Professional Dual Price Block --}}
-                            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(79, 209, 197, 0.25); border-radius: 14px; padding: 14px 18px; margin-bottom: 25px; display: flex; flex-direction: column; gap: 10px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
-                                    <span style="font-size: 0.72rem; font-weight: 800; color: #4fd1c5; letter-spacing: 1.5px; text-transform: uppercase;">OFFLINE</span>
-                                    <span style="font-size: 1.35rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; white-space: nowrap;">₹ {{ $fee->price_inr }}</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-size: 0.72rem; font-weight: 800; color: #94a3b8; letter-spacing: 1.5px; text-transform: uppercase;">ONLINE</span>
-                                    @if($fee->price_online)
-                                        <span style="font-size: 1.35rem; font-weight: 800; color: #e2e8f0; letter-spacing: -0.5px; white-space: nowrap;">₹ {{ $fee->price_online }}</span>
-                                    @else
-                                        <span style="font-size: 1.2rem; font-weight: 700; color: #64748b;">—</span>
-                                    @endif
-                                </div>
+        @php
+            $plans = [
+                [
+                    'title' => 'Student',
+                    'inr_offline' => '750',
+                    'inr_online' => '1,000',
+                    'usd_offline' => '8',
+                    'usd_online' => '10',
+                    'highlighted' => false,
+                ],
+                [
+                    'title' => 'Research Scholar',
+                    'inr_offline' => '1,200',
+                    'inr_online' => '1,500',
+                    'usd_offline' => '13',
+                    'usd_online' => '16',
+                    'highlighted' => false,
+                ],
+                [
+                    'title' => 'Faculty/Scientist',
+                    'inr_offline' => '2,000',
+                    'inr_online' => '2,500',
+                    'usd_offline' => '21',
+                    'usd_online' => '26',
+                    'highlighted' => true,
+                ],
+                [
+                    'title' => 'Industrialists',
+                    'inr_offline' => '5,000',
+                    'inr_online' => '6,000',
+                    'usd_offline' => '52',
+                    'usd_online' => '63',
+                    'highlighted' => false,
+                ]
+            ];
+        @endphp
+
+        @foreach($plans as $plan)
+            @if($plan['highlighted'])
+                <!-- Highlighted Card -->
+                <div class="pricing-card featured-card" style="background-color: #1e293b; border: 2px solid #4fd1c5; border-radius: 20px; padding: 40px 30px 30px 30px; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 30px rgba(79, 209, 197, 0.15); z-index: 2; text-align: center; overflow: visible;">
+                    <div class="pricing-badge" style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, #009688, #4fd1c5); color: #fff; padding: 6px 20px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">Most Popular</div>
+                    
+                    <h3 class="pricing-title" style="margin: 0 0 16px 0; color: #4fd1c5; font-size: 1.25rem; font-weight: 700;">{{ $plan['title'] }}</h3>
+                    
+                    {{-- Price Block --}}
+                    <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(79, 209, 197, 0.25); border-radius: 14px; padding: 14px 18px; margin-bottom: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8px;">
+                        <span style="font-size: 0.72rem; font-weight: 800; color: #4fd1c5; letter-spacing: 1.5px; text-transform: uppercase;">INDIANS (INR)</span>
+                        <div style="display: flex; gap: 20px; width: 100%; justify-content: center;">
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <span style="font-size: 0.65rem; color: #94a3b8; font-weight: bold; text-transform: uppercase;">Offline</span>
+                                <span style="font-size: 1.4rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">₹{{ $plan['inr_offline'] }}</span>
                             </div>
-                            
-                            <div style="display: flex; flex-direction: column; align-items: center; flex-grow: 1; margin-bottom: 30px;">
-                                <div style="display: inline-block; text-align: left;">
-                                    <ul class="pricing-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
-                                        @php $features = json_decode($fee->features, true) ?? []; @endphp
-                                        @foreach($features as $feature)
-                                            <li style="display: flex; gap: 10px; color: #cbd5e1; font-size: 0.95rem; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #4fd1c5; margin-top: 4px; width: 16px; text-align: center;"></i> <span>{{ $feature }}</span></li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <span style="font-size: 0.65rem; color: #94a3b8; font-weight: bold; text-transform: uppercase;">Online</span>
+                                <span style="font-size: 1.4rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">₹{{ $plan['inr_online'] }}</span>
                             </div>
-                            <a class="pricing-btn" href="/registration" style="display: block; text-align: center; background: #4fd1c5; color: #0f172a; padding: 12px 0; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 1rem; box-shadow: 0 10px 20px rgba(79, 209, 197, 0.2); transition: all 0.3s ease;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Register Now</a>
                         </div>
-                    @else
-                        <!-- Standard Card -->
-                        <div class="pricing-card" style="background-color: #1e293b; border: 1px solid #334155; border-radius: 20px; padding: 40px 30px 30px 30px; display: flex; flex-direction: column; transition: all 0.3s ease; box-shadow: 0 15px 30px rgba(0,0,0,0.2); text-align: center; overflow: visible;" onmouseover="this.style.borderColor='#4fd1c5'; this.style.boxShadow='0 0 20px rgba(79, 209, 197, 0.15)';" onmouseout="this.style.borderColor='#334155'; this.style.boxShadow='0 15px 30px rgba(0,0,0,0.2)';">
-                            <h3 class="pricing-title" style="margin: 0 0 16px 0; color: #f8fafc; font-size: 1.25rem; font-weight: 700;">{{ $fee->category_name }}</h3>
-                            
-                            {{-- Professional Dual Price Block --}}
-                            <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 14px 18px; margin-bottom: 25px; display: flex; flex-direction: column; gap: 10px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);">
-                                    <span style="font-size: 0.72rem; font-weight: 800; color: #4fd1c5; letter-spacing: 1.5px; text-transform: uppercase;">OFFLINE</span>
-                                    <span style="font-size: 1.35rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; white-space: nowrap;">₹ {{ $fee->price_inr }}</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-size: 0.72rem; font-weight: 800; color: #94a3b8; letter-spacing: 1.5px; text-transform: uppercase;">ONLINE</span>
-                                    @if($fee->price_online)
-                                        <span style="font-size: 1.35rem; font-weight: 800; color: #e2e8f0; letter-spacing: -0.5px; white-space: nowrap;">₹ {{ $fee->price_online }}</span>
-                                    @else
-                                        <span style="font-size: 1.2rem; font-weight: 700; color: #64748b;">—</span>
-                                    @endif
-                                </div>
+                        
+                        <div style="width: 80%; height: 1px; background: rgba(79, 209, 197, 0.2); margin: 6px 0;"></div>
+                        
+                        <span style="font-size: 0.72rem; font-weight: 800; color: #4fd1c5; letter-spacing: 1.5px; text-transform: uppercase;">FOREIGNERS (USD)</span>
+                        <div style="display: flex; gap: 20px; width: 100%; justify-content: center;">
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <span style="font-size: 0.65rem; color: #94a3b8; font-weight: bold; text-transform: uppercase;">Offline</span>
+                                <span style="font-size: 1.4rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">${{ $plan['usd_offline'] }}</span>
                             </div>
-                            
-                            <div style="display: flex; flex-direction: column; align-items: center; flex-grow: 1; margin-bottom: 30px;">
-                                <div style="display: inline-block; text-align: left;">
-                                    <ul class="pricing-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
-                                        @php $features = json_decode($fee->features, true) ?? []; @endphp
-                                        @foreach($features as $feature)
-                                            <li style="display: flex; gap: 10px; color: #cbd5e1; font-size: 0.95rem; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #4fd1c5; margin-top: 4px; width: 16px; text-align: center;"></i> <span>{{ $feature }}</span></li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <span style="font-size: 0.65rem; color: #94a3b8; font-weight: bold; text-transform: uppercase;">Online</span>
+                                <span style="font-size: 1.4rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">${{ $plan['usd_online'] }}</span>
                             </div>
-                            <a class="pricing-btn" href="/registration" style="display: block; text-align: center; background: transparent; color: #4fd1c5; padding: 12px 0; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 1rem; border: 1px solid #334155; transition: all 0.3s ease;" onmouseover="this.style.background='#4fd1c5'; this.style.color='#0f172a'; this.style.borderColor='#4fd1c5';" onmouseout="this.style.background='transparent'; this.style.color='#4fd1c5'; this.style.borderColor='#334155';">Register Now</a>
                         </div>
-                    @endif
-                @endforeach
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; align-items: center; flex-grow: 1; margin-bottom: 30px;">
+                        <div style="display: inline-block; text-align: left;">
+                            <ul class="pricing-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+                                <li style="display: flex; gap: 10px; color: #cbd5e1; font-size: 0.95rem; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #4fd1c5; margin-top: 4px; width: 16px; text-align: center;"></i> <span>Registration includes conference kit, certificate, lunch and refreshment.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <a class="pricing-btn" href="/registration" style="display: block; text-align: center; background: #4fd1c5; color: #0f172a; padding: 12px 0; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 1rem; box-shadow: 0 10px 20px rgba(79, 209, 197, 0.2); transition: all 0.3s ease;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Register Now</a>
+                </div>
             @else
-                <!-- Fallback if database is empty -->
-                <div style="grid-column: 1 / -1; text-align: center; color: #94a3b8; padding: 40px;">
-                    <i class="fa-solid fa-tags" style="font-size: 3rem; margin-bottom: 15px; color: #334155;"></i>
-                    <p>Registration plans are currently being updated. Please check back soon.</p>
+                <!-- Standard Card -->
+                <div class="pricing-card" style="background-color: #1e293b; border: 1px solid #334155; border-radius: 20px; padding: 40px 30px 30px 30px; display: flex; flex-direction: column; transition: all 0.3s ease; box-shadow: 0 15px 30px rgba(0,0,0,0.2); text-align: center; overflow: visible;" onmouseover="this.style.borderColor='#4fd1c5'; this.style.boxShadow='0 0 20px rgba(79, 209, 197, 0.15)';" onmouseout="this.style.borderColor='#334155'; this.style.boxShadow='0 15px 30px rgba(0,0,0,0.2)';">
+                    <h3 class="pricing-title" style="margin: 0 0 16px 0; color: #f8fafc; font-size: 1.25rem; font-weight: 700;">{{ $plan['title'] }}</h3>
+                    
+                    {{-- Price Block --}}
+                    <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 14px 18px; margin-bottom: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8px;">
+                        <span style="font-size: 0.72rem; font-weight: 800; color: #4fd1c5; letter-spacing: 1.5px; text-transform: uppercase;">INDIANS (INR)</span>
+                        <div style="display: flex; gap: 20px; width: 100%; justify-content: center;">
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <span style="font-size: 0.65rem; color: #94a3b8; font-weight: bold; text-transform: uppercase;">Offline</span>
+                                <span style="font-size: 1.4rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">₹{{ $plan['inr_offline'] }}</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <span style="font-size: 0.65rem; color: #94a3b8; font-weight: bold; text-transform: uppercase;">Online</span>
+                                <span style="font-size: 1.4rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">₹{{ $plan['inr_online'] }}</span>
+                            </div>
+                        </div>
+                        
+                        <div style="width: 80%; height: 1px; background: rgba(255, 255, 255, 0.08); margin: 6px 0;"></div>
+                        
+                        <span style="font-size: 0.72rem; font-weight: 800; color: #4fd1c5; letter-spacing: 1.5px; text-transform: uppercase;">FOREIGNERS (USD)</span>
+                        <div style="display: flex; gap: 20px; width: 100%; justify-content: center;">
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <span style="font-size: 0.65rem; color: #94a3b8; font-weight: bold; text-transform: uppercase;">Offline</span>
+                                <span style="font-size: 1.4rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">${{ $plan['usd_offline'] }}</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <span style="font-size: 0.65rem; color: #94a3b8; font-weight: bold; text-transform: uppercase;">Online</span>
+                                <span style="font-size: 1.4rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">${{ $plan['usd_online'] }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; align-items: center; flex-grow: 1; margin-bottom: 30px;">
+                        <div style="display: inline-block; text-align: left;">
+                            <ul class="pricing-list" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+                                <li style="display: flex; gap: 10px; color: #cbd5e1; font-size: 0.95rem; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #4fd1c5; margin-top: 4px; width: 16px; text-align: center;"></i> <span>Registration includes conference kit, certificate, lunch and refreshment.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <a class="pricing-btn" href="/registration" style="display: block; text-align: center; background: transparent; color: #4fd1c5; padding: 12px 0; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 1rem; border: 1px solid #334155; transition: all 0.3s ease;" onmouseover="this.style.background='#4fd1c5'; this.style.color='#0f172a'; this.style.borderColor='#4fd1c5';" onmouseout="this.style.background='transparent'; this.style.color='#4fd1c5'; this.style.borderColor='#334155';">Register Now</a>
                 </div>
             @endif
+        @endforeach
 
         </div>
 

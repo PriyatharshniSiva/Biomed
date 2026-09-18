@@ -173,105 +173,24 @@
             }
         </style>
         <div class="thrust-grid-alt">
-            
+            @forelse($tracks as $track)
             <div class="premium-topic-card">
                 <h3 class="premium-topic-title">
-                    <div>Track I: Emerging Infectious Diseases, Pandemic Preparedness and Molecular therapeutics</div>
+                    <div>{{ $track->title }}</div>
                 </h3>
+                @if($track->bullet_points && count($track->bullet_points) > 0)
                 <ul class="premium-topic-list">
-                    <li><i class="fa-solid fa-check"></i> <span>Zoonoses</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Vector-borne diseases</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Disease surveillance</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Pandemic preparedness</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Wildlife health</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Antimicrobial resistance</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Novel antimicrobials</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Molecular diagnostics</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Biosensors</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Synthetic biology</span></li>
+                    @foreach($track->bullet_points as $point)
+                    <li><i class="fa-solid fa-check"></i> <span>{{ $point }}</span></li>
+                    @endforeach
                 </ul>
+                @endif
             </div>
-
-            <div class="premium-topic-card">
-                <h3 class="premium-topic-title">
-                    <div>Track II: Ecosystem Health, Environmental Sustainability and Climate Health</div>
-                </h3>
-                <ul class="premium-topic-list">
-                    <li><i class="fa-solid fa-check"></i> <span>Ecosystem resilience</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Climate change</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Environmental health</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Waste management</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Pollution</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Circular bioeconomy</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Biodiversity conservation</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Sustainable production systems</span></li>
-                </ul>
+            @empty
+            <div style="grid-column: 1 / -1; text-align: center; color: #64748b; font-style: italic; padding: 40px;">
+                Thrust Areas and Tracks will be announced soon.
             </div>
-
-            <div class="premium-topic-card">
-                <h3 class="premium-topic-title">
-                    <div>Track III: Policy, Governance and Community Engagement</div>
-                </h3>
-                <ul class="premium-topic-list">
-                    <li><i class="fa-solid fa-check"></i> <span>One Health governance</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Public health policy</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Science communication</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Community participation</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Global health security</span></li>
-                </ul>
-            </div>
-
-            <div class="premium-topic-card">
-                <h3 class="premium-topic-title">
-                    <div>Track IV: Sustainable Chemistry and Future Technologies</div>
-                </h3>
-                <ul class="premium-topic-list">
-                    <li><i class="fa-solid fa-check"></i> <span>Green chemistry</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Advanced materials</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Environmental chemistry</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Translational biotechnology</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Molecular innovations</span></li>
-                </ul>
-            </div>
-
-            <div class="premium-topic-card">
-                <h3 class="premium-topic-title">
-                    <div>Track V: Indian Knowledge Systems (IKS) and One Health</div>
-                </h3>
-                <ul class="premium-topic-list">
-                    <li><i class="fa-solid fa-check"></i> <span>Traditional Healthcare Systems (Siddha, Ayurveda, Yoga, Unani and Folk Medicine)</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Ethnomedicine and Community Health Practices</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Medicinal Plants and Natural Product Research</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Traditional Food Systems, Nutrition and Functional Foods</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Biodiversity Conservation and Indigenous Ecological Knowledge</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Validation of Traditional Knowledge through Modern Science</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Integrative Medicine and Precision Traditional Therapeutics</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>One Health Perspectives in Indian Knowledge Systems</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Digital Documentation and Preservation of Indigenous Knowledge</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Policy, Ethics and Intellectual Property Rights in Traditional Knowledge</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>AI and Omics Approaches for Traditional Medicine Research</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Translational Research and Commercialization of IKS-based Innovations</span></li>
-                </ul>
-            </div>
-
-            <div class="premium-topic-card">
-                <h3 class="premium-topic-title">
-                    <div>Track VI: Regenerative and Precision Medicine</div>
-                </h3>
-                <ul class="premium-topic-list">
-                    <li><i class="fa-solid fa-check"></i> <span>Stem cell research</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Tissue engineering</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Gene therapy</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>3D Bioprinting</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Pharmacogenomics</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span>Artificial Intelligence and big data</span></li>
-                </ul>
-            </div>
-            
-        </div>
-
+            @endforelse
         </div>
     </div>
-    
-
 </section>

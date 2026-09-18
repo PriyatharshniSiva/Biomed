@@ -57,8 +57,11 @@ h6 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 500;
+    flex-wrap: nowrap;
+    gap: 10px;
+    overflow: hidden;
 }
 
 .topbar-left i,
@@ -70,6 +73,15 @@ h6 {
 
 .topbar span {
     margin-right: 15px;
+    white-space: nowrap;
+}
+
+.topbar-left, .topbar-center, .topbar-right {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
 }
 
 /* ================== Mobile Announcement Banner ================== */
@@ -207,7 +219,7 @@ h6 {
     text-decoration: none;
     color: var(--navy-dark);
     font-weight: 600;
-    font-size: 1.15rem;
+    font-size: 1.35rem;
     transition: var(--transition);
     position: relative;
     padding-bottom: 5px;

@@ -154,68 +154,7 @@
     }
 </style>
 
-<section class="awards-container">
-    <div class="awards-header">
-        <h2><i class="fa-solid fa-trophy" style="color: #009688; margin-right: 10px;"></i> Conference Awards</h2>
-        <div style="width: 70px; height: 3px; background: #009688; margin: 0 auto 16px auto; border-radius: 2px;"></div>
-        <p>A Worldwide Recognition Platform For Today's Leading Innovators, Scholars, and Experts.</p>
-    </div>
-
-    <div class="awards-intro">
-        {!! nl2br(e($awardsIntro)) !!}
-    </div>
-
-    @foreach($awards as $award)
-    @php
-        $prize = $prizes[$award->name] ?? null;
-    @endphp
-    <div class="award-card-box" id="award-{{ $award->id }}">
-        <div class="award-title-header">
-            <h3>
-                <i class="{{ $award->icon ?? 'fa-solid fa-award' }}" style="color: #009688;"></i> 
-                {{ $award->name }}
-            </h3>
-            @if($prize)
-            <div class="prize-badge">
-                Cash Prize: {{ $prize }}
-            </div>
-            @endif
-        </div>
-        
-        <p style="font-size: 1.05rem; color: #475569; line-height: 1.6; margin-bottom: 25px;">
-            {{ str_replace(['Cash Prize: ₹10,000', 'Cash Prize: ₹25,000'], '', $award->short_description) }}
-        </p>
-
-        @if($award->benefits)
-            <h4 class="award-subtitle"><i class="fa-solid fa-gift" style="color: #009688;"></i> Award Benefits</h4>
-            <ul class="award-list bullets">
-                @foreach(array_filter(array_map('trim', explode("\n", $award->benefits))) as $item)
-                    <li><span>{!! $item !!}</span></li>
-                @endforeach
-            </ul>
-        @endif
-
-        @if($award->eligibility)
-            <h4 class="award-subtitle"><i class="fa-solid fa-user-check" style="color: #009688;"></i> Eligibility</h4>
-            <ul class="award-list checks">
-                @foreach(array_filter(array_map('trim', explode("\n", $award->eligibility))) as $item)
-                    <li><span>{!! $item !!}</span></li>
-                @endforeach
-            </ul>
-        @endif
-
-        @if($award->guidelines)
-            <h4 class="award-subtitle"><i class="fa-solid fa-clipboard-list" style="color: #009688;"></i> Evaluation & Guidelines</h4>
-            <ul class="award-list checks">
-                @foreach(array_filter(array_map('trim', explode("\n", $award->guidelines))) as $item)
-                    <li><span>{!! $item !!}</span></li>
-                @endforeach
-            </ul>
-        @endif
-    </div>
-    @endforeach
-
-</section>
+@include('sections.awards')
 
 @include('sections.footer')
 

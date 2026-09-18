@@ -108,9 +108,8 @@
     <!-- Speakers List -->
     <div>
         <div class="nav-tabs">
-            <a href="{{ route('admin.speakers', ['type' => 'plenary']) }}" class="nav-tab {{ $type == 'plenary' ? 'active' : '' }}">Plenary Speakers</a>
-            <a href="{{ route('admin.speakers', ['type' => 'keynote']) }}" class="nav-tab {{ $type == 'keynote' ? 'active' : '' }}">Keynote Visionaries</a>
-            <a href="{{ route('admin.speakers', ['type' => 'invited']) }}" class="nav-tab {{ $type == 'invited' ? 'active' : '' }}">Invited Speakers</a>
+            <a href="{{ route('admin.speakers', ['type' => 'keynote']) }}" class="nav-tab {{ $type == 'keynote' ? 'active' : '' }}">Keynote Speakers</a>
+            <a href="{{ route('admin.speakers', ['type' => 'distinguished']) }}" class="nav-tab {{ $type == 'distinguished' ? 'active' : '' }}">Distinguished Speakers</a>
         </div>
 
         <div class="card" style="margin-bottom: 30px;">
@@ -162,7 +161,14 @@
                 <div id="method-spoofing"></div>
                 
                 <input type="hidden" name="sort_order" id="sort_order" value="{{ count($speakers) + 1 }}">
-                <input type="hidden" name="type" id="type" value="{{ $type }}">
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label class="form-label" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-sidebar); font-size: 0.9rem;">Speaker Type *</label>
+                    <select name="type" id="type" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; font-family: inherit;">
+                        <option value="keynote" {{ $type == 'keynote' ? 'selected' : '' }}>Keynote Speaker</option>
+                        <option value="distinguished" {{ $type == 'distinguished' ? 'selected' : '' }}>Distinguished Speaker</option>
+                    </select>
+                </div>
 
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--admin-sidebar); font-size: 0.9rem;">Full Name</label>

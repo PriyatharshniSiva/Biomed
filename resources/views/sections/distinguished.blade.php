@@ -2,221 +2,72 @@
 <section class="distinguished-section" style="padding: 70px 0; background: #ffffff; font-family: 'Inter', system-ui, -apple-system, sans-serif;">
     <div class="container" style="max-width: 1140px; margin: 0 auto; padding: 0 20px;">
         
-        <!-- Header matching Plenary / Keynote / Invited design -->
-        <div style="text-align: center; margin-bottom: 45px;">
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 50px;">
             <h2 style="font-size: 2.4rem; font-weight: 800; color: #0f172a; margin: 0 0 12px 0; text-transform: uppercase; letter-spacing: -0.5px;">
-                Distinguished <span style="color: #009688;">Speaker</span>
+                Distinguished <span style="color: #009688;">Speakers</span>
             </h2>
             <div style="width: 70px; height: 4px; background: #84cc16; margin: 0 auto 16px auto; border-radius: 2px;"></div>
-            <p style="font-size: 1.05rem; color: #64748b; max-width: 700px; margin: 0 auto; line-height: 1.6;">
-                The Minds Behind The Momentum
-            </p>
         </div>
 
-        <!-- Speakers Grid matching reference design -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 30px; justify-content: center;">
+        <!-- Speakers Grid new design -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; justify-content: center; align-items: start;">
             
-            @php
-                $distinguishedSpeakers = \App\Models\Speaker::where('type', 'distinguished')->orderBy('sort_order')->get();
-            @endphp
-
-            @foreach($distinguishedSpeakers as $speaker)
-            <div style="background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04); padding: 28px; display: flex; gap: 22px; align-items: flex-start; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 20px 40px rgba(15, 23, 42, 0.08)'" onmouseout="this.style.transform='none'; this.style.boxShadow='0 10px 30px rgba(15, 23, 42, 0.04)'">
-                
-                <!-- Left Photo -->
-                <div style="width: 130px; height: 130px; flex-shrink: 0; border-radius: 14px; overflow: hidden; background: #f1f5f9; border: 1px solid #e2e8f0;">
-                    <img src="{{ asset($speaker->image_path) }}" alt="{{ $speaker->name }}" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&h=400&fit=crop'">
+            <!-- Speaker 1 -->
+            <div style="text-align: center;">
+                <div style="width: 250px; height: 250px; margin: 0 auto 20px auto; border-radius: 50%; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                    <img src="{{ asset('images/speakers/mohan.png') }}" alt="Prof. Mohan K. Balasubramanian" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&h=400&fit=crop'">
                 </div>
-
-                <!-- Right Details -->
-                <div style="flex-grow: 1; display: flex; flex-direction: column;">
-                    <h3 style="margin: 0 0 6px 0; color: #0f172a; font-size: 1.3rem; font-weight: 800; line-height: 1.3;">{{ $speaker->name }}</h3>
-                    
-                    <p style="margin: 0 0 4px 0; color: #475569; font-size: 0.9rem; font-weight: 600; line-height: 1.4;">{{ $speaker->title ?? $speaker->university }}</p>
-                    
-                    @if($speaker->current_role && $speaker->current_role !== $speaker->title)
-                        <p style="margin: 0 0 10px 0; color: #64748b; font-size: 0.84rem; line-height: 1.4;">{{ $speaker->current_role }}</p>
-                    @elseif($speaker->country)
-                        <p style="margin: 0 0 10px 0; color: #64748b; font-size: 0.84rem;">{{ $speaker->university }} • {{ $speaker->country }}</p>
-                    @endif
-
-                    <div style="border-top: 1px dotted #cbd5e1; margin: 10px 0 12px 0;"></div>
-
-                    @if($speaker->field)
-                    <div style="margin-bottom: 8px;">
-                        <span style="font-size: 0.72rem; font-weight: 800; color: #009688; text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 2px;">Field / Specialization</span>
-                        <p style="margin: 0; font-size: 0.86rem; color: #1e293b; font-weight: 600;">{{ $speaker->field }}</p>
-                    </div>
-                    @elseif($speaker->h_index)
-                    <div style="margin-bottom: 8px;">
-                        <span style="font-size: 0.72rem; font-weight: 800; color: #009688; text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 2px;">H-Index</span>
-                        <p style="margin: 0; font-size: 0.86rem; color: #1e293b; font-weight: 600;">{{ $speaker->h_index }}</p>
-                    </div>
-                    @endif
-
-                    <!-- Hidden details for Modal -->
-                    <div id="speaker-data-{{ $speaker->id }}" style="display: none;">
-                        <div class="modal-speaker-name">{{ $speaker->name }}</div>
-                        <div class="modal-speaker-title">{{ $speaker->title }}</div>
-                        <div class="modal-speaker-role">{{ $speaker->current_role }}</div>
-                        <div class="modal-speaker-field">{{ $speaker->field }}</div>
-                        <div class="modal-speaker-edu">{{ $speaker->education }}</div>
-                        <div class="modal-speaker-honours">{{ $speaker->honours }}</div>
-                        <div class="modal-speaker-bio">{!! nl2br(e($speaker->biography)) !!}</div>
-                        <div class="modal-speaker-achievements">{!! nl2br(e($speaker->key_achievements)) !!}</div>
-                        <div class="modal-speaker-relevance">{!! nl2br(e($speaker->relevance)) !!}</div>
-                        <div class="modal-speaker-img">{{ asset($speaker->image_path) }}</div>
-                    </div>
-
-                    <button type="button" onclick="openDistinguishedModal({{ $speaker->id }})" style="margin-top: 10px; align-self: flex-start; background: #f8fafc; border: 1px solid #cbd5e1; color: #009688; padding: 6px 16px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;" onmouseover="this.style.background='#009688'; this.style.color='#ffffff'; this.style.borderColor='#009688';" onmouseout="this.style.background='#f8fafc'; this.style.color='#009688'; this.style.borderColor='#cbd5e1';">
-                        View Full Details <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
-
+                <h3 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0;">Prof. Mohan K. Balasubramanian</h3>
+                <p style="font-size: 1rem; color: #334155; margin: 0; line-height: 1.5;">Wellcome Trust Senior Investigator & Pro-Dean (Biomedical Research), Warwick Medical School; Division of Biomedical Cell Biology, University of Warwick, United Kingdom</p>
             </div>
-            @endforeach
+
+            <!-- Speaker 2 -->
+            <div style="text-align: center;">
+                <div style="width: 250px; height: 250px; margin: 0 auto 20px auto; border-radius: 50%; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                    <img src="{{ asset('images/speakers/priya.jpg') }}" alt="Dr. Priya Abraham" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&h=400&fit=crop'">
+                </div>
+                <h3 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0;">Dr. Priya Abraham</h3>
+                <p style="font-size: 1rem; color: #334155; margin: 0; line-height: 1.5;">Former Director, ICMR-National Institute of Virology (NIV), Pune; Senior Professor, Department of Clinical Virology, Christian Medical College (CMC), Vellore</p>
+            </div>
+
+            <!-- Speaker 3 -->
+            <div style="text-align: center;">
+                <div style="width: 250px; height: 250px; margin: 0 auto 20px auto; border-radius: 50%; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                    <img src="{{ asset('images/speakers/liew.jpg') }}" alt="Prof. Ts. Dr. Liew Kai Bin" style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.15);" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&h=400&fit=crop'">
+                </div>
+                <h3 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0;">Prof. Ts. Dr. Liew Kai Bin</h3>
+                <p style="font-size: 1rem; color: #334155; margin: 0; line-height: 1.5;">Professor & Head, Department of Pharmaceutical Technology & Industry, Faculty of Pharmacy, University of Cyberjaya (UoC), Malaysia</p>
+            </div>
+
+            <!-- Speaker 4 -->
+            <div style="text-align: center;">
+                <div style="width: 250px; height: 250px; margin: 0 auto 20px auto; border-radius: 50%; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                    <img src="{{ asset('images/speakers/ravikanth.jpg') }}" alt="G. Ravikanth" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&h=400&fit=crop'">
+                </div>
+                <h3 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0;">G. Ravikanth</h3>
+                <p style="font-size: 1rem; color: #334155; margin: 0; line-height: 1.5;">Sr. Fellow and Convenor, Academy for Conservation Science and Sustainability Studies, Bengaluru, India</p>
+            </div>
+
+            <!-- Speaker 5 -->
+            <div style="text-align: center;">
+                <div style="width: 250px; height: 250px; margin: 0 auto 20px auto; border-radius: 50%; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                    <img src="{{ asset('images/speakers/murthy.jpg') }}" alt="Dr. G. S. Murthy" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&h=400&fit=crop'">
+                </div>
+                <h3 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0;">Dr. G. S. Murthy</h3>
+                <p style="font-size: 1rem; color: #334155; margin: 0; line-height: 1.5;">Professor<br>IIT Indore, Madhya Pradesh, India</p>
+            </div>
+
+            <!-- Speaker 6 -->
+            <div style="text-align: center;">
+                <div style="width: 250px; height: 250px; margin: 0 auto 20px auto; border-radius: 50%; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                    <img src="{{ asset('images/speakers/suresh.jpg') }}" alt="Dr. Suresh Kannan S" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&h=400&fit=crop'">
+                </div>
+                <h3 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0;">Dr. Suresh Kannan S</h3>
+                <p style="font-size: 1rem; color: #334155; margin: 0; line-height: 1.5;">Prof & Head, Department of Veterinary Public Health and Epidemiology, TANUVAS</p>
+            </div>
 
         </div>
 
     </div>
 </section>
-
-<!-- True 100% Full Screen Speaker Profile Modal -->
-@if(!defined('DISTINGUISHED_MODAL_RENDERED'))
-@php define('DISTINGUISHED_MODAL_RENDERED', true); @endphp
-<div id="distinguishedModal" style="display: none; position: fixed; z-index: 999999; top: 0; left: 0; width: 100vw; height: 100vh; background: #ffffff;">
-    <div style="background: #ffffff; width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; display: flex; flex-direction: column; position: relative; overflow: hidden; border: none; margin: 0; padding: 0;">
-        
-        <!-- Fullscreen Edge-to-Edge Modal Header -->
-        <div style="background: #0f172a; color: #ffffff; padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; border-bottom: 3px solid #009688;">
-            <div style="font-weight: 800; font-size: 1.4rem; letter-spacing: 0.3px;">
-                Speaker Profile & Biography
-            </div>
-            <button onclick="closeDistinguishedModal()" style="background: #ef4444; border: none; color: #ffffff; padding: 8px 22px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; transition: background 0.2s;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">
-                <span>Close</span> &times;
-            </button>
-        </div>
-
-        <!-- Fullscreen Scrollable Body Content -->
-        <div style="flex-grow: 1; overflow-y: auto; background: #ffffff;">
-            <div style="max-width: 1300px; margin: 0 auto; padding: 40px 50px;">
-                
-                <!-- Top Hero Banner Card -->
-                <div style="display: flex; gap: 35px; margin-bottom: 40px; align-items: center; background: #f8fafc; padding: 35px 40px; border-radius: 16px; border: 1px solid #e2e8f0; flex-wrap: wrap;">
-                    <img id="dm-img" src="" alt="" style="width: 180px; height: 180px; border-radius: 16px; object-fit: cover; border: 4px solid #009688; box-shadow: 0 10px 25px rgba(0,0,0,0.1); flex-shrink: 0;">
-                    <div style="flex-grow: 1;">
-                        <h2 id="dm-name" style="margin: 0 0 10px 0; color: #0f172a; font-size: 2.2rem; font-weight: 900; line-height: 1.2;"></h2>
-                        <p id="dm-title" style="margin: 0 0 8px 0; color: #009688; font-weight: 700; font-size: 1.15rem; line-height: 1.4;"></p>
-                        <p id="dm-role" style="margin: 0; color: #475569; font-size: 1.02rem; line-height: 1.5; font-weight: 500;"></p>
-                    </div>
-                </div>
-
-                <!-- Details Stack -->
-                <div style="display: flex; flex-direction: column; gap: 30px; font-size: 1.05rem; color: #334155; line-height: 1.75;">
-                    
-                    <div id="dm-field-wrap" style="background: #f0fdf4; padding: 20px 25px; border-radius: 12px; border: 1px solid #bbf7d0;">
-                        <div style="font-weight: 800; color: #166534; margin-bottom: 4px; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.8px;">Field of Specialization</div>
-                        <div id="dm-field" style="color: #0f766e; font-weight: 700; font-size: 1.1rem;"></div>
-                    </div>
-
-                    <div id="dm-edu-wrap" style="display: none;">
-                        <h3 style="margin: 0 0 12px 0; color: #0f172a; font-weight: 800; font-size: 1.25rem;">
-                            Education & Qualifications
-                        </h3>
-                        <p id="dm-edu" style="margin: 0; background: #f8fafc; border-left: 4px solid #009688; padding: 16px 22px; border-radius: 6px; color: #1e293b; font-weight: 500;"></p>
-                    </div>
-
-                    <div id="dm-bio-wrap" style="display: none;">
-                        <h3 style="margin: 0 0 12px 0; color: #0f172a; font-weight: 800; font-size: 1.25rem;">
-                            Biography
-                        </h3>
-                        <div id="dm-bio" style="color: #475569; text-align: justify; font-size: 1.05rem; background: #ffffff; padding: 5px 0;"></div>
-                    </div>
-
-                    <div id="dm-achievements-wrap" style="display: none;">
-                        <h3 style="margin: 0 0 12px 0; color: #0f172a; font-weight: 800; font-size: 1.25rem;">
-                            Key Achievements & Contributions
-                        </h3>
-                        <div id="dm-achievements" style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 22px 28px; border-radius: 12px; color: #166534; font-size: 1.02rem; line-height: 1.75;"></div>
-                    </div>
-
-                    <div id="dm-relevance-wrap" style="display: none;">
-                        <h3 style="margin: 0 0 12px 0; color: #0f172a; font-weight: 800; font-size: 1.25rem;">
-                            Relevance as a Keynote / Distinguished Speaker
-                        </h3>
-                        <div id="dm-relevance" style="background: #f0f9ff; border: 1px solid #bae6fd; padding: 22px 28px; border-radius: 12px; color: #0369a1; font-size: 1.02rem; line-height: 1.75;"></div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- Fullscreen Modal Footer -->
-        <div style="padding: 18px 50px; background: #f8fafc; border-top: 1px solid #e2e8f0; text-align: right; flex-shrink: 0;">
-            <button onclick="closeDistinguishedModal()" style="padding: 11px 32px; background: #0f172a; color: #ffffff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem; transition: background 0.2s;" onmouseover="this.style.background='#009688'" onmouseout="this.style.background='#0f172a'">
-                Close Profile
-            </button>
-        </div>
-
-    </div>
-</div>
-
-<script>
-    function openDistinguishedModal(id) {
-        var data = document.getElementById('speaker-data-' + id);
-        if (!data) return;
-
-        document.getElementById('dm-name').innerText = data.querySelector('.modal-speaker-name').innerText;
-        document.getElementById('dm-title').innerText = data.querySelector('.modal-speaker-title').innerText;
-        document.getElementById('dm-role').innerText = data.querySelector('.modal-speaker-role').innerText;
-        document.getElementById('dm-img').src = data.querySelector('.modal-speaker-img').innerText;
-
-        var field = data.querySelector('.modal-speaker-field').innerText;
-        document.getElementById('dm-field').innerText = field;
-
-        var edu = data.querySelector('.modal-speaker-edu').innerText;
-        var eduWrap = document.getElementById('dm-edu-wrap');
-        if (edu && edu.trim() !== '') {
-            document.getElementById('dm-edu').innerText = edu;
-            eduWrap.style.display = 'block';
-        } else {
-            eduWrap.style.display = 'none';
-        }
-
-        var bio = data.querySelector('.modal-speaker-bio').innerHTML;
-        var bioWrap = document.getElementById('dm-bio-wrap');
-        if (bio && bio.trim() !== '') {
-            document.getElementById('dm-bio').innerHTML = bio;
-            bioWrap.style.display = 'block';
-        } else {
-            bioWrap.style.display = 'none';
-        }
-
-        var achievements = data.querySelector('.modal-speaker-achievements').innerHTML;
-        var achievementsWrap = document.getElementById('dm-achievements-wrap');
-        if (achievements && achievements.trim() !== '') {
-            document.getElementById('dm-achievements').innerHTML = achievements;
-            achievementsWrap.style.display = 'block';
-        } else {
-            achievementsWrap.style.display = 'none';
-        }
-
-        var relevance = data.querySelector('.modal-speaker-relevance').innerHTML;
-        var relevanceWrap = document.getElementById('dm-relevance-wrap');
-        if (relevance && relevance.trim() !== '') {
-            document.getElementById('dm-relevance').innerHTML = relevance;
-            relevanceWrap.style.display = 'block';
-        } else {
-            relevanceWrap.style.display = 'none';
-        }
-
-        document.getElementById('distinguishedModal').style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeDistinguishedModal() {
-        document.getElementById('distinguishedModal').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-</script>
-@endif

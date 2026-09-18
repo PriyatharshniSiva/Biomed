@@ -304,7 +304,7 @@
     <!-- Patrons Grid -->
     @if(isset($leadership['patrons']))
     <div style="text-align: center; margin: 0 0 15px 0;">
-        <span class="cm-role-pill-badge teal" style="margin-bottom: 0;">PATRONS</span>
+        <span class="cm-role-pill-badge teal" style="margin-bottom: 0;">PATRON</span>
     </div>
     <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin-bottom: 35px;">
         @foreach($leadership['patrons'] as $member)
@@ -388,14 +388,52 @@
     </div>
     
     @if(count($advisory) > 0)
-    <div class="cm-grid-3">
-        @foreach($advisory as $member)
-        <div class="cm-person-card">
-            <h4 class="cm-name">{{ $member->name }}</h4>
-            <p class="cm-desc">{!! nl2br(e($member->designation)) !!}</p>
+    
+        @php
+            $intlAdvisory = $advisory->where('subcategory', 'international');
+            $natlAdvisory = $advisory->where('subcategory', 'national');
+            $otherAdvisory = $advisory->whereNotIn('subcategory', ['international', 'national']);
+        @endphp
+
+        @if($intlAdvisory->count() > 0)
+        <div style="text-align: center; margin: 40px 0 15px 0;">
+            <span class="cm-role-pill-badge" style="margin-bottom: 0;">INTERNATIONAL ADVISORY COMMITTEE</span>
         </div>
-        @endforeach
-    </div>
+        <div class="cm-grid-3">
+            @foreach($intlAdvisory as $member)
+            <div class="cm-person-card">
+                <h4 class="cm-name">{{ $member->name }}</h4>
+                <p class="cm-desc">{!! nl2br(e($member->designation)) !!}</p>
+            </div>
+            @endforeach
+        </div>
+        @endif
+
+        @if($natlAdvisory->count() > 0)
+        <div style="text-align: center; margin: 40px 0 15px 0;">
+            <span class="cm-role-pill-badge" style="margin-bottom: 0;">NATIONAL ADVISORY COMMITTEE</span>
+        </div>
+        <div class="cm-grid-3">
+            @foreach($natlAdvisory as $member)
+            <div class="cm-person-card">
+                <h4 class="cm-name">{{ $member->name }}</h4>
+                <p class="cm-desc">{!! nl2br(e($member->designation)) !!}</p>
+            </div>
+            @endforeach
+        </div>
+        @endif
+        
+        @if($otherAdvisory->count() > 0)
+        <div class="cm-grid-3">
+            @foreach($otherAdvisory as $member)
+            <div class="cm-person-card">
+                <h4 class="cm-name">{{ $member->name }}</h4>
+                <p class="cm-desc">{!! nl2br(e($member->designation)) !!}</p>
+            </div>
+            @endforeach
+        </div>
+        @endif
+
     @else
     <div style="text-align: center; background: #f8fafc; border: 1px dashed #cbd5e1; padding: 40px; border-radius: 16px; max-width: 800px; margin: 0 auto 60px auto;">
         <h4 style="margin: 0 0 8px 0; color: #0f172a; font-weight: 700; font-size: 1.2rem;">Advisory Board Members</h4>

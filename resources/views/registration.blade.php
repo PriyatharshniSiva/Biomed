@@ -21,11 +21,28 @@
         <div class="container registration-container">
             
             <!-- Instructions -->
-            <div class="reg-instructions" style="margin-bottom: 40px; background: #fff; padding: 25px; border-radius: 12px; border-left: 4px solid var(--teal-accent); box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
-                <p style="margin: 0; color: #475569; line-height: 1.6;">{!! $settings['reg_page_notice'] ?? '<strong>All fields are required.</strong> Payments (INR) are securely processed online. Confirmations are sent within 48 hours. For support: <a href="mailto:contact@biomedsummit.org" style="color: var(--teal-accent); font-weight: 600;">contact@biomedsummit.org</a>.' !!}</p>
+            <div class="reg-instructions" style="margin-bottom: 40px; background: #f0f7fa; padding: 35px 40px; border-radius: 12px; border: 1px solid #d1e5f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <h3 style="text-align: center; color: #1e3250; margin-top: 0; font-size: 1.35rem; font-weight: 700; margin-bottom: 10px;">{{ $settings['reg_proc_title'] ?? 'Registration Process of GOHC - 2026' }}</h3>
+                <p style="text-align: center; font-size: 1.05rem; margin-bottom: 25px; color: #1e3250;">{{ $settings['reg_proc_sub'] ?? 'Participation in GOHC 2026 is open only to registered delegates..' }}</p>
+                
+                <h4 style="text-align: center; color: #1e3250; font-size: 1.15rem; font-weight: 700; margin-bottom: 20px;">{{ $settings['reg_proc_heading'] ?? 'Steps for Conference Registration' }}</h4>
+                
+                <ul style="list-style-type: none; padding: 0; margin: 0;">
+                    @for($i = 1; $i <= 5; $i++)
+                        @if(!empty($settings['reg_step_' . $i]))
+                        <li style="margin-bottom: 15px; font-size: 1.05rem; font-style: italic; display: flex; align-items: flex-start; line-height: 1.5; color: #1e3250;">
+                            <span style="font-weight: bold; font-style: normal; margin-right: 8px;">*</span> 
+                            <span>{{ $settings['reg_step_' . $i] }}</span>
+                        </li>
+                        @endif
+                    @endfor
+                </ul>
+                <div style="margin-top: 30px; border-top: 1px solid #d1e5f0; padding-top: 20px;">
+                    <p style="margin: 0; color: #475569; line-height: 1.6; text-align: center;">{!! $settings['reg_page_notice'] ?? '<strong>All fields are required.</strong> Payments (INR) are securely processed online. Confirmations are sent within 48 hours. For support: <a href="mailto:contact@biomedsummit.org" style="color: var(--teal-accent); font-weight: 600;">contact@biomedsummit.org</a>.' !!}</p>
+                </div>
             </div>
 
-            <form id="registration-form" action="{{ url('/api/register') }}" method="POST">
+            <form id="registration-form" action="{{ url('/api/register') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 
                 <!-- Personal Info Grid -->
@@ -59,25 +76,23 @@
                             @endif
                         </div>
                     @endforeach
+                    
+                    <div class="form-group file-upload-group" id="abstract-upload-section" style="grid-column: 1 / -1; margin-top: 20px;">
+                        <label for="abstract_file" class="file-upload-label" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; border: 2px dashed var(--teal-accent); border-radius: 12px; background: #f8fafc; cursor: pointer; transition: all 0.3s ease; text-align: center;">
+                            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3.5rem; color: var(--teal-accent); margin-bottom: 15px;"></i>
+                            <span style="font-weight: 700; font-size: 1.3rem; color: var(--navy-dark); margin-bottom: 8px;">Upload Abstract Document</span>
+                            <span style="font-size: 0.95rem; color: #64748b;">Supported formats: DOC, DOCX, PDF (Max size: 5MB)</span>
+                            <span id="file-chosen" style="margin-top: 20px; font-weight: 700; color: var(--green-accent); font-size: 1.1rem; display: none; background: rgba(0, 168, 150, 0.1); padding: 8px 16px; border-radius: 8px;"></span>
+                        </label>
+                        <input type="file" name="abstract_file" id="abstract_file" accept=".doc,.docx,.pdf" style="display: none;">
+                        <span id="file-error" style="color: #ef4444; font-size: 0.95rem; margin-top: 10px; font-weight: 600; display: none;"><i class="fa-solid fa-circle-exclamation"></i> Please upload your abstract document before submitting.</span>
+                    </div>
                 </div>
+
 
                 <div class="section-divider" style="margin: 40px 0;"></div>
 
-                <!-- Participation Mode -->
-                <div class="reg-section-title" style="margin-bottom: 20px;">
-                    <h2 style="font-size: clamp(1.4rem, 5vw, 1.8rem); color: var(--navy-dark);">Mode of Participation</h2>
-                    <p style="color: #64748b; font-size: clamp(0.95rem, 3vw, 1.05rem);">Select whether you will attend in-person (Offline) or virtually (Online).</p>
-                </div>
-
-                <div class="mode-selection" style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 35px;">
-                    <label class="mode-option" style="flex: 1; min-width: 220px; display: flex; align-items: center; gap: 12px; padding: 18px 24px; border: 2px solid var(--teal-accent); border-radius: 12px; cursor: pointer; background: #f0fdfa; transition: all 0.3s;">
-                        <input type="radio" name="participation_mode" value="online" checked style="width: 20px; height: 20px; accent-color: var(--teal-accent);">
-                        <div>
-                            <strong style="font-size: 1.1rem; color: var(--navy-dark); display: block;">Online (Virtual)</strong>
-                            <span style="font-size: 0.85rem; color: #64748b;">Join via virtual platform</span>
-                        </div>
-                    </label>
-                </div>
+                <input type="hidden" name="participation_mode" value="offline">
 
                 <!-- Registration Category -->
                 <div class="reg-section-title" style="margin-bottom: 25px;">
@@ -85,7 +100,7 @@
                     <p style="color: #64748b; font-size: clamp(0.95rem, 3vw, 1.05rem);">{{ $settings['reg_category_subtitle'] ?? 'Registration includes conference kit, certificate, lunch and refreshment.' }}</p>
                 </div>
 
-                <input type="hidden" name="reg_category" id="offline-fallback-category" value="0" disabled>
+
                 <div class="category-selection" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px;">
                     @foreach($registrationFees as $index => $fee)
                         @php
@@ -147,57 +162,6 @@
                     </div>
                 </div>
 
-                <!-- Payment Method -->
-                <div id="payment-section">
-                    <div class="reg-section-title" style="margin-bottom: 20px;">
-                        <h2 style="font-size: clamp(1.4rem, 5vw, 1.8rem); color: var(--navy-dark);">{{ $settings['reg_payment_title'] ?? 'Payment Method' }}</h2>
-                    </div>
-
-                    <div class="payment-method-selection" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 35px;">
-                        <!-- UPI -->
-                        <label class="pay-method-option" style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border: 2px solid var(--teal-accent); border-radius: 12px; cursor: pointer; transition: all 0.3s; background: #f0fdfa;">
-                            <div style="display: flex; align-items: center; gap: 15px;">
-                                <input type="radio" name="payment_method" value="upi" checked style="width: 22px; height: 22px; accent-color: var(--teal-accent);">
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <div style="background: rgba(0, 168, 150, 0.1); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                                        <i class="fa-solid fa-qrcode" style="font-size: 1.2rem; color: var(--teal-accent);"></i>
-                                    </div>
-                                    <span style="font-weight: 700; font-size: 1.1rem; color: var(--navy-dark);">UPI (GPay, PhonePe, Paytm)</span>
-                                </div>
-                            </div>
-                        </label>
-
-                        <!-- Card -->
-                        <label class="pay-method-option" style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border: 2px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.3s; background: #fff;">
-                            <div style="display: flex; align-items: center; gap: 15px;">
-                                <input type="radio" name="payment_method" value="card" style="width: 22px; height: 22px; accent-color: var(--teal-accent);">
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <div style="background: rgba(10, 25, 47, 0.05); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                                        <i class="fa-regular fa-credit-card" style="font-size: 1.2rem; color: var(--navy-dark);"></i>
-                                    </div>
-                                    <span style="font-weight: 700; font-size: 1.1rem; color: var(--navy-dark);">Credit / Debit Card</span>
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 8px;">
-                                <i class="fa-brands fa-cc-visa" style="font-size: 1.8rem; color: #1a1f71;"></i>
-                                <i class="fa-brands fa-cc-mastercard" style="font-size: 1.8rem; color: #eb001b;"></i>
-                            </div>
-                        </label>
-
-                        <!-- Net Banking -->
-                        <label class="pay-method-option" style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border: 2px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.3s; background: #fff;">
-                            <div style="display: flex; align-items: center; gap: 15px;">
-                                <input type="radio" name="payment_method" value="netbanking" style="width: 22px; height: 22px; accent-color: var(--teal-accent);">
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <div style="background: rgba(10, 25, 47, 0.05); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                                        <i class="fa-solid fa-building-columns" style="font-size: 1.2rem; color: var(--navy-dark);"></i>
-                                    </div>
-                                    <span style="font-weight: 700; font-size: 1.1rem; color: var(--navy-dark);">Net Banking</span>
-                                </div>
-                            </div>
-                        </label>
-                    </div>
-                </div>
 
                 <div class="reg-consent" style="margin-bottom: 35px; background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0;">
                     <label style="display: flex; gap: 12px; align-items: flex-start; cursor: pointer; margin: 0;">
@@ -211,19 +175,15 @@
                 </div>
             </form>
 
-            <!-- Accordions -->
-            <div class="reg-accordions">
-                @foreach($policies as $index => $policy)
-                    <div class="accordion-item" style="border: 1px solid var(--border-light); margin-bottom: 15px; border-radius: 6px; overflow: hidden; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
-                        <button class="accordion-header {{ $index === 0 ? 'active' : '' }}" style="width: 100%; text-align: left; padding: 18px 20px; background: {{ $index === 0 ? '#eaf8f6' : '#f8f9fa' }}; border: none; font-weight: 700; color: var(--navy-dark); font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; text-transform: uppercase; transition: background 0.3s ease;">
-                            {{ $policy->title }}
-                            <i class="fa-solid {{ $index === 0 ? 'fa-circle-arrow-up' : 'fa-circle-arrow-down' }}" style="color: var(--teal-accent); font-size: 1.2rem;"></i>
-                        </button>
-                        <div class="accordion-content" style="padding: 20px; display: {{ $index === 0 ? 'block' : 'none' }}; color: var(--text-body); line-height: 1.6; border-top: 1px solid var(--border-light);">
-                            {!! $policy->content_html !!}
-                        </div>
-                    </div>
-                @endforeach
+            <!-- Please Note -->
+            <div class="reg-notes" style="background-color: #f4f8fa; padding: 35px 40px; border-radius: 12px; margin-bottom: 40px; border: 1px solid #e1eef4;">
+                <h4 style="text-align: center; color: var(--navy-dark); font-size: 1.35rem; font-weight: 700; margin-top: 0; margin-bottom: 25px;">Please Note :</h4>
+                <ul style="padding-left: 20px; margin: 0; color: var(--navy-dark); font-size: 1.1rem; line-height: 1.8;">
+                    <li style="margin-bottom: 15px;">Registration fee is non-refundable.</li>
+                    <li style="margin-bottom: 15px;">The fee is per delegate and includes GST.</li>
+                    <li style="margin-bottom: 15px;">Each delegate is entitled to attend all conference sessions.</li>
+                    <li style="margin-bottom: 15px;">Accommodation and travel expenses are not included in the registration fee.</li>
+                </ul>
             </div>
 
         </div>
@@ -234,7 +194,6 @@
     <!-- Registration Logic -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const modeRadios = document.querySelectorAll('input[name="participation_mode"]');
             const categoryRadios = document.querySelectorAll('input[name="reg_category"]');
             const paymentMethodRadios = document.querySelectorAll('input[name="payment_method"]');
             const addonCheckboxes = document.querySelectorAll('.addon-checkbox');
@@ -246,74 +205,25 @@
             
             const paymentSection = document.getElementById('payment-section');
             const orderSummarySection = document.getElementById('order-summary-section');
-            const offlineFallbackCategory = document.getElementById('offline-fallback-category');
             const submitButtonText = document.getElementById('submit-button-text');
             const defaultButtonText = {!! json_encode($settings['reg_button_text'] ?? 'Proceed to Pay') !!};
 
             function updateModePrices() {
-                const selectedMode = document.querySelector('input[name="participation_mode"]:checked')?.value || 'online';
-                
-                if (selectedMode === 'offline') {
-                    if (paymentSection) paymentSection.style.display = 'none';
-                    if (orderSummarySection) orderSummarySection.style.display = 'none';
-                    if (offlineFallbackCategory) offlineFallbackCategory.disabled = false;
-                    if (submitButtonText) submitButtonText.innerText = 'Register Now (Pay at Venue)';
-                } else {
-                    if (paymentSection) paymentSection.style.display = 'block';
-                    if (orderSummarySection) orderSummarySection.style.display = 'block';
-                    if (offlineFallbackCategory) offlineFallbackCategory.disabled = true;
-                    if (submitButtonText) submitButtonText.innerText = defaultButtonText;
-                }
-                
-                // Style mode buttons
-                modeRadios.forEach(radio => {
-                    const label = radio.closest('.mode-option');
-                    if (radio.checked) {
-                        label.style.borderColor = 'var(--teal-accent)';
-                        label.style.background = '#f0fdfa';
-                    } else {
-                        label.style.borderColor = '#e2e8f0';
-                        label.style.background = '#fff';
-                    }
-                });
+                if (paymentSection) paymentSection.style.display = 'block';
+                if (orderSummarySection) orderSummarySection.style.display = 'block';
+                if (submitButtonText) submitButtonText.innerText = defaultButtonText;
 
                 // Update category price radios
                 categoryRadios.forEach(radio => {
                     const label = radio.closest('.category-option');
                     const displayTag = label.querySelector('.cat-price-display');
                     const offlineVal = parseInt(radio.getAttribute('data-offline')) || 0;
-                    const onlineValAttr = radio.getAttribute('data-online');
-                    const onlineVal = onlineValAttr ? parseInt(onlineValAttr) : null;
 
-                    if (selectedMode === 'online') {
-                        radio.style.display = 'inline-block';
-                        label.style.pointerEvents = 'auto';
-                        
-                        if (onlineVal !== null && !isNaN(onlineVal)) {
-                            radio.value = onlineVal;
-                            radio.disabled = false;
-                            label.style.opacity = '1';
-                            label.style.cursor = 'pointer';
-                            displayTag.innerText = onlineVal.toLocaleString() + ' INR';
-                        } else {
-                            radio.disabled = true;
-                            radio.checked = false;
-                            label.style.opacity = '0.5';
-                            label.style.cursor = 'not-allowed';
-                            displayTag.innerText = 'Offline Only';
-                        }
-                    } else {
-                        radio.style.display = 'none';
-                        radio.disabled = true;
-                        radio.checked = false;
-                        label.style.pointerEvents = 'none';
-                        label.style.borderColor = '#e2e8f0';
-                        label.style.background = '#fff';
-                        
-                        label.style.opacity = '1';
-                        label.style.cursor = 'default';
-                        displayTag.innerText = offlineVal.toLocaleString() + ' INR';
-                    }
+                    radio.value = offlineVal;
+                    radio.disabled = false;
+                    label.style.opacity = '1';
+                    label.style.pointerEvents = 'auto';
+                    displayTag.innerText = offlineVal.toLocaleString() + ' INR';
                 });
 
                 calculateTotal();
@@ -386,11 +296,8 @@
                     }
                 });
 
-                const selectedMode = document.querySelector('input[name="participation_mode"]:checked')?.value || 'offline';
-                const modeLabel = selectedMode === 'online' ? ' (Online)' : ' (Offline)';
-
                 if (catSelected) {
-                    sumCatName.innerText = catName + modeLabel + ' Registration';
+                    sumCatName.innerText = catName + ' Registration';
                     sumCatPrice.innerText = catPrice.toLocaleString() + ' INR';
                     total += catPrice;
                 } else {
@@ -419,7 +326,6 @@
             }
 
             // Add event listeners
-            modeRadios.forEach(m => m.addEventListener('change', updateModePrices));
             categoryRadios.forEach(r => r.addEventListener('change', calculateTotal));
             paymentMethodRadios.forEach(r => r.addEventListener('change', updatePaymentStyle));
             addonCheckboxes.forEach(r => r.addEventListener('change', calculateTotal));
@@ -427,6 +333,28 @@
             // Initial call
             updateModePrices();
             calculateTotal();
+
+            // Abstract Upload Logic
+            const interestSelect = document.querySelector('select[name="fields[interested_in]"]');
+            const abstractUploadSection = document.getElementById('abstract-upload-section');
+            const abstractFileInput = document.getElementById('abstract_file');
+            const fileChosenLabel = document.getElementById('file-chosen');
+            const form = document.getElementById('registration-form');
+            const fileError = document.getElementById('file-error');
+
+            if (abstractFileInput) {
+                abstractFileInput.addEventListener('change', function(e) {
+                    if (this.files && this.files.length > 0) {
+                        fileChosenLabel.style.display = 'inline-block';
+                        fileChosenLabel.innerHTML = '<i class="fa-solid fa-file-check" style="margin-right: 5px;"></i> ' + this.files[0].name;
+                        fileError.style.display = 'none';
+                    } else {
+                        fileChosenLabel.style.display = 'none';
+                    }
+                });
+            }
+
+
 
             // Accordion Logic
             const headers = document.querySelectorAll('.accordion-header');

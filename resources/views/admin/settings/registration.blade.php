@@ -29,34 +29,72 @@
 
     <form method="POST" action="{{ route('admin.settings.registration.update') }}">
         @csrf
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr)); gap: 30px;">
+        <div style="display: flex; flex-direction: column; gap: 30px;">
             
-            @foreach(['registration' => 'Registration Page Content', 'reg_fields' => 'Registration Form Fields'] as $groupKey => $groupName)
-                @if(isset($settings[$groupKey]))
-                    <div class="card" style="margin-bottom: 0;">
-                        <h3 style="color: var(--admin-sidebar); font-size: 1.2rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--admin-border);">{{ $groupName }}</h3>
-                        
-                        @foreach($settings[$groupKey] as $setting)
-                            @if($setting->key !== 'reg_interested_options')
-                                <div style="margin-bottom: 20px;">
-                                    <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px; font-size: 0.9rem;">{{ $setting->label ?? ucfirst(str_replace('_', ' ', $setting->key)) }}</label>
-                                    
-                                    @if($setting->type == 'textarea')
-                                        <textarea name="{{ $setting->key }}" style="width: 100%; padding: 12px 15px; border: 1px solid var(--admin-border); border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.95rem;" rows="4">{{ old($setting->key, $setting->value) }}</textarea>
-                                    @else
-                                        <input type="text" name="{{ $setting->key }}" value="{{ old($setting->key, $setting->value) }}" style="width: 100%; padding: 12px 15px; border: 1px solid var(--admin-border); border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.95rem;">
-                                    @endif
-                                </div>
-                            @endif
-                        @endforeach
+            <!-- SECTION 1: HEADER TITLE & SUBTITLE -->
+            <div class="card" style="margin-bottom: 0;">
+                <h3 style="color: var(--admin-sidebar); font-size: 1.2rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--admin-border); display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-heading" style="color: #009688;"></i> 1. Registration Plans Header Settings
+                </h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px; font-size: 0.9rem;">Section Heading Title</label>
+                        <input type="text" name="reg_section_title" value="{{ $settings['reg_section_title'] ?? 'Registration Plans' }}" style="width: 100%; padding: 12px 15px; border: 1px solid var(--admin-border); border-radius: 8px; font-size: 0.95rem;">
                     </div>
-                @endif
-            @endforeach
-            
+                    <div>
+                        <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px; font-size: 0.9rem;">Section Subtitle / Description</label>
+                        <input type="text" name="reg_section_sub" value="{{ $settings['reg_section_sub'] ?? 'Choose the appropriate registration tier to access the conference. Super early-bird rates are currently active.' }}" style="width: 100%; padding: 12px 15px; border: 1px solid var(--admin-border); border-radius: 8px; font-size: 0.95rem;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: REGISTRATION PROCESS BOX -->
+            <div class="card" style="margin-bottom: 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--admin-border);">
+                    <h3 style="color: var(--admin-sidebar); font-size: 1.2rem; margin: 0; display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-list-check" style="color: #009688;"></i> 2. Registration Process Box Settings
+                    </h3>
+                    <button type="button" class="btn" style="background: #f1f5f9; color: #0f172a; border: 1px dashed #cbd5e1; padding: 6px 14px; font-weight: 600; font-size: 0.85rem;" onclick="addRegStepItem()">
+                        <i class="fa-solid fa-plus"></i> Add Step Item
+                    </button>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <div>
+                        <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px; font-size: 0.9rem;">Process Box Main Title</label>
+                        <input type="text" name="reg_proc_title" value="{{ $settings['reg_proc_title'] ?? 'Registration Process of GOHC - 2026' }}" style="width: 100%; padding: 12px 15px; border: 1px solid var(--admin-border); border-radius: 8px; font-size: 0.95rem;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px; font-size: 0.9rem;">Process Subtitle Note</label>
+                        <input type="text" name="reg_proc_sub" value="{{ $settings['reg_proc_sub'] ?? 'Participation in GOHC 2026 is open only to registered delegates..' }}" style="width: 100%; padding: 12px 15px; border: 1px solid var(--admin-border); border-radius: 8px; font-size: 0.95rem;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px; font-size: 0.9rem;">Steps Section Subheading</label>
+                        <input type="text" name="reg_proc_heading" value="{{ $settings['reg_proc_heading'] ?? 'Steps for Conference Registration' }}" style="width: 100%; padding: 12px 15px; border: 1px solid var(--admin-border); border-radius: 8px; font-size: 0.95rem;">
+                    </div>
+                </div>
+
+                <h4 style="font-size: 1rem; color: var(--admin-sidebar); margin: 15px 0 15px; font-weight: 700;">Registration Process Bullet Steps</h4>
+
+                <div id="reg-steps-wrapper">
+                    @for($i = 1; $i <= 20; $i++)
+                        @if(isset($settings['reg_step_' . $i]))
+                        <div class="reg-step-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                <label style="font-weight: 600; color: #009688; font-size: 0.85rem; margin: 0;">Step Text</label>
+                                <button type="button" style="background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; cursor: pointer;" onclick="this.closest('.reg-step-item').remove()"><i class="fa-solid fa-trash"></i> Delete</button>
+                            </div>
+                            <input type="text" name="reg_steps[]" value="{{ $settings['reg_step_' . $i] }}" style="width: 100%; padding: 10px 12px; border: 1px solid var(--admin-border); border-radius: 6px; font-size: 0.9rem;">
+                        </div>
+                        @endif
+                    @endfor
+                </div>
+            </div>
+
         </div>
 
         <div style="margin-top: 30px; text-align: right;">
-            <button type="submit" class="btn btn-primary" style="padding: 12px 30px; font-size: 1.05rem;">
+            <button type="submit" class="btn btn-primary" style="padding: 12px 30px; font-size: 1.05rem; background: #009688;">
                 <i class="fa-solid fa-save"></i> Save Registration Settings
             </button>
         </div>
@@ -282,6 +320,18 @@
             document.getElementById('edit_content').value = policy.content_html;
             document.getElementById('edit_active').checked = policy.is_active ? true : false;
             openModal('editModal');
+        }
+
+        function addRegStepItem() {
+            const html = `
+            <div class="reg-step-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <label style="font-weight: 600; color: #009688; font-size: 0.85rem; margin: 0;">New Step Text</label>
+                    <button type="button" style="background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; cursor: pointer;" onclick="this.closest('.reg-step-item').remove()"><i class="fa-solid fa-trash"></i> Delete</button>
+                </div>
+                <input type="text" name="reg_steps[]" placeholder="Enter step description" style="width: 100%; padding: 10px 12px; border: 1px solid var(--admin-border); border-radius: 6px; font-size: 0.9rem;">
+            </div>`;
+            document.getElementById('reg-steps-wrapper').insertAdjacentHTML('beforeend', html);
         }
     </script>
 @endsection

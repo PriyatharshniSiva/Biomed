@@ -1,10 +1,10 @@
 @extends('layouts.admin_cms')
 
-@section('header_title', 'Programs & Themes')
+@section('header_title', 'Scientific Themes')
 
 @section('content')
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-        <h2 style="color: var(--admin-sidebar); font-size: 1.5rem;">Programs & Themes</h2>
+        <h2 style="color: var(--admin-sidebar); font-size: 1.5rem;">Scientific Themes</h2>
         <p style="color: #64748b; font-size: 0.9rem;">Manage the content for the Workshop and Thrust Areas (Themes) sections.</p>
     </div>
 
@@ -18,7 +18,7 @@
         @csrf
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
             
-            @foreach(['workshop' => 'Pre-Conference Workshop Section', 'thrust_areas' => 'Thrust Areas (Conference Themes)'] as $groupKey => $groupName)
+            @foreach(['workshop' => 'Pre-Conference Workshop Section'] as $groupKey => $groupName)
                 @if(isset($settings[$groupKey]))
                     <div class="card" style="margin-bottom: 0;">
                         <h3 style="color: var(--admin-sidebar); font-size: 1.2rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--admin-border);">{{ $groupName }}</h3>
@@ -64,4 +64,109 @@
             </button>
         </div>
     </form>
+
+    <hr style="margin: 40px 0; border: none; border-top: 1px solid var(--admin-border);">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h2 style="color: var(--admin-sidebar); font-size: 1.5rem;">Thrust Areas (Tracks)</h2>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 350px; gap: 30px;">
+        <!-- Tracks List -->
+        <div>
+            @foreach($tracks as $track)
+                <div class="card" style="margin-bottom: 15px; padding: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h4 style="color: var(--admin-sidebar); margin: 0; font-size: 1.1rem;">{{ $track->title }} <span style="font-size: 0.85rem; color: #64748b; margin-left: 10px;">(Order: {{ $track->sort_order }})</span></h4>
+                        <div style="display: flex; gap: 10px;">
+                            <button type="button" class="btn" style="padding: 6px 12px; font-size: 0.9rem;" onclick='editTrack(@json($track))'>Edit</button>
+                            <form action="{{ route('admin.tracks.destroy', $track->id) }}" method="POST" onsubmit="return confirm('Delete this track?');" style="margin:0;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn" style="background: #ef4444; padding: 6px 12px; font-size: 0.9rem;">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                    @if($track->bullet_points && count($track->bullet_points) > 0)
+                        <ul style="margin-top: 15px; padding-left: 20px; color: #475569;">
+                            @foreach($track->bullet_points as $point)
+                                <li style="margin-bottom: 5px;">{{ $point }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+
+        <!-- Add/Edit Track Form -->
+        <div>
+            <div class="card" style="position: sticky; top: 20px;">
+                <h3 id="track-form-title" style="color: var(--admin-sidebar); margin-bottom: 20px; font-size: 1.2rem;">Add New Track</h3>
+                
+                <form id="track-form" method="POST" action="{{ route('admin.tracks.store') }}">
+                    @csrf
+                    <div id="track-method"></div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px;">Track Title *</label>
+                        <input type="text" name="title" id="track_title" required style="width: 100%; padding: 10px; border: 1px solid var(--admin-border); border-radius: 6px;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px;">Sort Order</label>
+                        <input type="number" name="sort_order" id="track_sort_order" value="{{ count($tracks) + 1 }}" style="width: 100%; padding: 10px; border: 1px solid var(--admin-border); border-radius: 6px;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px;">Bullet Points</label>
+                        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px;">Enter one bullet point per line.</p>
+                        <div id="bullet-points-container">
+                            <input type="text" name="bullet_points[]" style="width: 100%; padding: 10px; border: 1px solid var(--admin-border); border-radius: 6px; margin-bottom: 10px;" placeholder="Bullet point text...">
+                        </div>
+                        <button type="button" class="btn" style="background: #e2e8f0; color: #475569; padding: 6px 12px; font-size: 0.85rem; margin-top: 5px;" onclick="addBulletPoint()">+ Add Another Point</button>
+                    </div>
+
+                    <button type="submit" id="track-submit-btn" class="btn" style="width: 100%; margin-top: 10px;">Save Track</button>
+                    <button type="button" id="track-cancel-btn" style="display: none; width: 100%; background: #e2e8f0; color: #475569; padding: 12px; border: none; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: 600;" onclick="window.location.reload();">Cancel Edit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addBulletPoint(value = '') {
+            const container = document.getElementById('bullet-points-container');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'bullet_points[]';
+            input.value = value;
+            input.style = 'width: 100%; padding: 10px; border: 1px solid var(--admin-border); border-radius: 6px; margin-bottom: 10px;';
+            input.placeholder = 'Bullet point text...';
+            container.appendChild(input);
+        }
+
+        function editTrack(track) {
+            document.getElementById('track-form-title').innerText = 'Edit Track';
+            let form = document.getElementById('track-form');
+            form.action = `/admin/programs/tracks/${track.id}`;
+            document.getElementById('track-method').innerHTML = '<input type="hidden" name="_method" value="PUT">';
+            
+            document.getElementById('track_title').value = track.title;
+            document.getElementById('track_sort_order').value = track.sort_order;
+            
+            // Handle bullet points
+            const container = document.getElementById('bullet-points-container');
+            container.innerHTML = '';
+            if (track.bullet_points && track.bullet_points.length > 0) {
+                track.bullet_points.forEach(point => {
+                    addBulletPoint(point);
+                });
+            } else {
+                addBulletPoint(); // Add at least one empty
+            }
+
+            document.getElementById('track-submit-btn').innerText = 'Update Track';
+            document.getElementById('track-cancel-btn').style.display = 'block';
+        }
+    </script>
 @endsection

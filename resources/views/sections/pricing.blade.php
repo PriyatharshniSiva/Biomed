@@ -3,27 +3,32 @@
     <div class="container" style="max-width: 1100px; margin: 0 auto; padding: 0 20px;">
         
         <div class="section-header-center" style="text-align: center; margin-bottom: 40px;">
-            <h2 class="section-title" style="margin-top: 0; margin-bottom: 12px; color: #ffffff; font-weight: 800; line-height: 1.2; white-space: nowrap;">Registration <span style="color: #009688;">Plans</span></h2>
+            <h2 class="section-title" style="margin-top: 0; margin-bottom: 12px; color: #ffffff; font-weight: 800; line-height: 1.2; white-space: nowrap;">{{ $settings['reg_section_title'] ?? 'Registration Plans' }}</h2>
             <div class="header-line" style="width: 60px; height: 4px; background-color: #009688; margin: 0 auto 15px auto;"></div>
             <p class="participants-desc" style="max-width: 800px; margin: 0 auto; color: #94a3b8 !important;">
-                Choose the appropriate registration tier to access the conference.
+                {{ $settings['reg_section_sub'] ?? 'Choose the appropriate registration tier to access the conference. Super early-bird rates are currently active.' }}
             </p>
         </div>
 
-        {{-- Mode toggle labels --}}
-        <div style="display: flex; justify-content: center; gap: 0; margin-bottom: 32px;">
-            <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border-radius: 40px; padding: 5px; gap: 4px; border: 1px solid rgba(255,255,255,0.08);">
-                <div style="padding: 8px 22px; background: rgba(0,150,136,0.18); border-radius: 30px; color: #1de9b6; font-weight: 800; font-size: 0.82rem; letter-spacing: 1.5px; text-transform: uppercase;">
-                    <i class="fa-solid fa-wifi-slash" style="margin-right: 6px; font-size: 0.75rem;"></i>Offline
-                </div>
-                <div style="padding: 8px 22px; border-radius: 30px; color: #64748b; font-weight: 700; font-size: 0.82rem; letter-spacing: 1.5px; text-transform: uppercase;">
-                    <i class="fa-solid fa-globe" style="margin-right: 6px; font-size: 0.75rem;"></i>Online
-                </div>
-            </div>
+        <div class="registration-process" style="background-color: #f0f7fa; color: #1e3250; padding: 35px 40px; border-radius: 12px; margin-bottom: 50px; max-width: 900px; margin-left: auto; margin-right: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+            <h3 style="text-align: center; color: #1e3250; margin-top: 0; font-size: 1.35rem; font-weight: 700; margin-bottom: 10px;">{{ $settings['reg_proc_title'] ?? 'Registration Process of GOHC - 2026' }}</h3>
+            <p style="text-align: center; font-size: 1.05rem; margin-bottom: 25px; color: #1e3250;">{{ $settings['reg_proc_sub'] ?? 'Participation in GOHC 2026 is open only to registered delegates..' }}</p>
+            
+            <h4 style="text-align: center; color: #1e3250; font-size: 1.15rem; font-weight: 700; margin-bottom: 20px;">{{ $settings['reg_proc_heading'] ?? 'Steps for Conference Registration' }}</h4>
+            
+            <ul style="list-style-type: none; padding: 0; margin: 0;">
+                @for($i = 1; $i <= 5; $i++)
+                    @if(!empty($settings['reg_step_' . $i]))
+                    <li style="margin-bottom: 15px; font-size: 1.05rem; font-style: italic; display: flex; align-items: flex-start; line-height: 1.5;">
+                        <span style="color: #1e3250; font-weight: bold; font-style: normal; margin-right: 8px;">*</span> 
+                        <span>{{ $settings['reg_step_' . $i] }}</span>
+                    </li>
+                    @endif
+                @endfor
+            </ul>
         </div>
 
-        <div class="pricing-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; align-items: stretch;">
-            
+        <div class="pricing-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; align-items: stretch;">            
             @foreach($registrationFees as $fee)
                 @php
                     $features = json_decode($fee->features, true) ?? [];
@@ -42,36 +47,14 @@
                     <div style="padding: {{ $highlighted ? '36px 24px 20px' : '28px 24px 20px' }}; border-bottom: 1px solid rgba(255,255,255,0.06);">
                         <h3 style="margin: 0 0 20px; color: #ffffff; font-size: 1.1rem; font-weight: 800; letter-spacing: 0.3px;">{{ $fee->category_name }}</h3>
 
-                        {{-- Two price columns --}}
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-
-                            {{-- Offline --}}
-                            <div style="background: rgba(0,150,136,0.1); border: 1px solid rgba(0,150,136,0.2); border-radius: 12px; padding: 14px 12px; text-align: center;">
-                                <div style="font-size: 0.6rem; font-weight: 900; color: #1de9b6; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px;">
-                                    <i class="fa-solid fa-building" style="margin-right: 3px;"></i>Offline
-                                </div>
-                                <div style="font-size: 1.55rem; font-weight: 900; color: #ffffff; line-height: 1; letter-spacing: -1px;">
-                                    ₹{{ $fee->price_inr }}
-                                </div>
-                                <div style="font-size: 0.65rem; color: #64748b; margin-top: 4px; font-weight: 600;">INR</div>
+                        {{-- Price Block --}}
+                        <div style="background: rgba(0,150,136,0.1); border: 1px solid rgba(0,150,136,0.2); border-radius: 12px; padding: 14px 12px; text-align: center;">
+                            <div style="font-size: 0.6rem; font-weight: 900; color: #1de9b6; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px;">
+                                Registration Fee
                             </div>
-
-                            {{-- Online --}}
-                            <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 14px 12px; text-align: center;">
-                                <div style="font-size: 0.6rem; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px;">
-                                    <i class="fa-solid fa-globe" style="margin-right: 3px;"></i>Online
-                                </div>
-                                @if($fee->price_online)
-                                    <div style="font-size: 1.55rem; font-weight: 900; color: #94a3b8; line-height: 1; letter-spacing: -1px;">
-                                        ₹{{ $fee->price_online }}
-                                    </div>
-                                    <div style="font-size: 0.65rem; color: #64748b; margin-top: 4px; font-weight: 600;">INR</div>
-                                @else
-                                    <div style="font-size: 1.4rem; font-weight: 900; color: #475569; line-height: 1; margin-top: 4px;">—</div>
-                                    <div style="font-size: 0.65rem; color: #475569; margin-top: 4px;">N/A</div>
-                                @endif
+                            <div style="font-size: 2rem; font-weight: 900; color: #ffffff; line-height: 1; letter-spacing: -1px;">
+                                ₹{{ $fee->price_inr }}
                             </div>
-
                         </div>
                     </div>
 

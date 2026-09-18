@@ -1,7 +1,9 @@
 <!-- Navbar -->
 <nav class="navbar">
-    <a href="/" class="logo">
-        <img src="{{ asset('images/logo.png') }}" alt="BioMed Summit Logo" class="navbar-logo">
+    <a href="/" class="logo" style="display: flex; align-items: center; gap: 15px;">
+        <div style="display: flex; justify-content: center; align-items: center; padding: 5px 0;">
+            <img src="{{ asset('images/MMC-LOGO-2.jpg') }}" alt="MMC Logo" style="height: 120px; width: auto; mix-blend-mode: multiply;">
+        </div>
     </a>
     
     <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation">
@@ -18,13 +20,8 @@
                 <a href="{{ route('distinguished-speakers') }}">Distinguished Speakers</a>
             </div>
         </div>
-        <div class="nav-dropdown">
-            <a href="#">Abstract</a>
-            <div class="nav-dropdown-content">
-                <a href="{{ route('submit-paper') }}">Submit A Paper</a>
-            </div>
-        </div>
-        <a href="{{ route('scientific-themes') }}">Themes</a>
+
+        <a href="{{ route('scientific-themes') }}">Tracks</a>
         <a href="{{ route('schedule') }}">Schedule</a>
         <a href="{{ route('awards') }}">Awards</a>
         <a href="{{ route('venue') }}">Venue</a>

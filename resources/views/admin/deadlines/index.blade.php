@@ -1,8 +1,10 @@
+@if(!isset($is_included))
 @extends('layouts.admin_cms')
 
-@section('header_title', 'Manage Timeline & Deadlines')
+@section('header_title', 'Important Deadlines CMS')
 
 @section('content')
+@endif
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
         <h2 style="color: var(--admin-sidebar); font-size: 1.5rem;">Important Dates</h2>
     </div>
@@ -13,26 +15,13 @@
         </div>
     @endif
 
-    <!-- Section Content Settings -->
-    <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.event_details.update') }}" enctype="multipart/form-data">
         @csrf
         
         <div class="card">
             <h3 style="margin-bottom: 20px; color: var(--admin-sidebar); border-bottom: 2px solid var(--admin-border); padding-bottom: 10px;">
                 Deadlines Section Content
             </h3>
-            
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px;">{{ $settings['deadlines']->where('key', 'deadlines_image')->first()->label ?? 'Section Image' }}</label>
-                @php $currentImg = $settings['deadlines']->where('key', 'deadlines_image')->first()->value ?? ''; @endphp
-                
-                <div id="image-preview-container" style="margin-bottom: 10px; {{ $currentImg ? '' : 'display: none;' }}">
-                    <img id="image-preview" src="{{ $currentImg ? (str_starts_with($currentImg, 'http') ? $currentImg : asset($currentImg)) : '' }}" alt="Preview" style="max-height: 150px; border-radius: 8px; border: 1px solid var(--admin-border);">
-                </div>
-                
-                <input type="file" name="deadlines_image" id="deadlines_image" accept="image/*" style="width: 100%; padding: 10px 15px; border: 1px solid var(--admin-border); border-radius: 8px;" onchange="previewSelectedImage(this)">
-                <small style="color: #64748b; display: block; margin-top: 5px;">Leave empty to keep current image. Recommended size: 600x500px.</small>
-            </div>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                 <div>
@@ -42,50 +31,6 @@
                 <div>
                     <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px;">{{ $settings['deadlines']->where('key', 'deadlines_subtitle')->first()->label ?? 'Subtitle' }}</label>
                     <input type="text" name="deadlines_subtitle" value="{{ $settings['deadlines']->where('key', 'deadlines_subtitle')->first()->value ?? '' }}" style="width: 100%; padding: 10px 15px; border: 1px solid var(--admin-border); border-radius: 8px;">
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                <div>
-                    <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px;">Stat 1 Num (Auto)</label>
-                    <input type="text" disabled value="Auto-calculated ({{ count($deadlines) }})" style="width: 100%; padding: 10px 15px; border: 1px solid var(--admin-border); border-radius: 8px; margin-bottom: 10px; background-color: #f1f5f9; color: #94a3b8;">
-                    <input type="hidden" name="deadlines_stat1_num" value="{{ count($deadlines) }}">
-                    <input type="text" name="deadlines_stat1_label" value="{{ $settings['deadlines']->where('key', 'deadlines_stat1_label')->first()->value ?? '' }}" style="width: 100%; padding: 10px 15px; border: 1px solid var(--admin-border); border-radius: 8px;" placeholder="Label">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px;">{{ $settings['deadlines']->where('key', 'deadlines_stat2_num')->first()->label ?? 'Stat 2 Num' }}</label>
-                    <input type="text" name="deadlines_stat2_num" value="{{ $settings['deadlines']->where('key', 'deadlines_stat2_num')->first()->value ?? '' }}" style="width: 100%; padding: 10px 15px; border: 1px solid var(--admin-border); border-radius: 8px; margin-bottom: 10px;">
-                    <input type="text" name="deadlines_stat2_label" value="{{ $settings['deadlines']->where('key', 'deadlines_stat2_label')->first()->value ?? '' }}" style="width: 100%; padding: 10px 15px; border: 1px solid var(--admin-border); border-radius: 8px;" placeholder="Label">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px;">{{ $settings['deadlines']->where('key', 'deadlines_stat3_num')->first()->label ?? 'Stat 3 Num' }}</label>
-                    <input type="text" name="deadlines_stat3_num" value="{{ $settings['deadlines']->where('key', 'deadlines_stat3_num')->first()->value ?? '' }}" style="width: 100%; padding: 10px 15px; border: 1px solid var(--admin-border); border-radius: 8px; margin-bottom: 10px;">
-                    <input type="text" name="deadlines_stat3_label" value="{{ $settings['deadlines']->where('key', 'deadlines_stat3_label')->first()->value ?? '' }}" style="width: 100%; padding: 10px 15px; border: 1px solid var(--admin-border); border-radius: 8px;" placeholder="Label">
-                </div>
-            </div>
-            
-            <h3 style="margin-top: 30px; margin-bottom: 20px; color: var(--admin-sidebar); border-bottom: 2px solid var(--admin-border); padding-bottom: 10px;">
-                Call to Action Banner
-            </h3>
-
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px;">{{ $settings['deadlines']->where('key', 'deadlines_banner_text')->first()->label ?? 'Banner Text' }}</label>
-                <input type="text" name="deadlines_banner_text" value="{{ $settings['deadlines']->where('key', 'deadlines_banner_text')->first()->value ?? '' }}" style="width: 100%; padding: 10px 15px; border: 1px solid var(--admin-border); border-radius: 8px;">
-            </div>
-
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px;">{{ $settings['deadlines']->where('key', 'deadlines_banner_sub')->first()->label ?? 'Banner Subtitle' }}</label>
-                <input type="text" name="deadlines_banner_sub" value="{{ $settings['deadlines']->where('key', 'deadlines_banner_sub')->first()->value ?? '' }}" style="width: 100%; padding: 10px 15px; border: 1px solid var(--admin-border); border-radius: 8px;">
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                <div>
-                    <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px;">{{ $settings['deadlines']->where('key', 'deadlines_banner_btn')->first()->label ?? 'Button Text' }}</label>
-                    <input type="text" name="deadlines_banner_btn" value="{{ $settings['deadlines']->where('key', 'deadlines_banner_btn')->first()->value ?? '' }}" style="width: 100%; padding: 10px 15px; border: 1px solid var(--admin-border); border-radius: 8px;">
-                </div>
-                <div>
-                    <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px;">{{ $settings['deadlines']->where('key', 'deadlines_banner_link')->first()->label ?? 'Button Link' }}</label>
-                    <input type="text" name="deadlines_banner_link" value="{{ $settings['deadlines']->where('key', 'deadlines_banner_link')->first()->value ?? '' }}" style="width: 100%; padding: 10px 15px; border: 1px solid var(--admin-border); border-radius: 8px;">
                 </div>
             </div>
 
@@ -109,4 +54,74 @@
             }
         }
     </script>
+
+    <!-- Manage Individual Deadlines Section -->
+    <div class="card" style="margin-top: 30px;">
+        <h3 style="margin-bottom: 20px; color: var(--admin-sidebar); border-bottom: 2px solid var(--admin-border); padding-bottom: 10px;">
+            Manage Individual Deadlines
+        </h3>
+        
+        <!-- Add New Deadline Form -->
+        <div style="background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 30px;">
+            <h4 style="margin-bottom: 15px; color: var(--admin-primary);"><i class="fa-solid fa-plus"></i> Add New Deadline</h4>
+            <form method="POST" action="{{ route('admin.deadlines.store') }}">
+                @csrf
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: end;">
+                    <div>
+                        <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px;">Date / Value</label>
+                        <input type="text" name="deadline_date" required placeholder="e.g. 2026-09-10" style="width: 100%; padding: 10px; border: 1px solid var(--admin-border); border-radius: 6px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px;">Title</label>
+                        <input type="text" name="title" required placeholder="e.g. ABSTRACT SUBMISSION" style="width: 100%; padding: 10px; border: 1px solid var(--admin-border); border-radius: 6px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 600; color: var(--admin-text); margin-bottom: 8px;">Sort Order</label>
+                        <input type="number" name="sort_order" value="0" required style="width: 100%; padding: 10px; border: 1px solid var(--admin-border); border-radius: 6px;">
+                    </div>
+                    <div>
+                        <button type="submit" class="btn"><i class="fa-solid fa-plus"></i> Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- List of Existing Deadlines -->
+        <div style="display: grid; gap: 15px;">
+            @foreach($deadlines as $dl)
+            <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+                <form method="POST" action="{{ route('admin.deadlines.update', $dl->id) }}" style="flex: 1; display: grid; grid-template-columns: 1fr 1fr 100px 100px auto; gap: 15px; align-items: center; margin-right: 20px;">
+                    @csrf
+                    @method('PUT')
+                    
+                    <input type="text" name="deadline_date" value="{{ $dl->deadline_date }}" required style="width: 100%; padding: 8px; border: 1px solid var(--admin-border); border-radius: 6px;">
+                    <input type="text" name="title" value="{{ $dl->title }}" required style="width: 100%; padding: 8px; border: 1px solid var(--admin-border); border-radius: 6px;">
+                    
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <input type="hidden" name="is_active" value="0">
+                        <input type="checkbox" name="is_active" value="1" {{ $dl->is_active ? 'checked' : '' }}> Active
+                    </div>
+                    
+                    <input type="number" name="sort_order" value="{{ $dl->sort_order }}" required style="width: 100%; padding: 8px; border: 1px solid var(--admin-border); border-radius: 6px;">
+                    
+                    <button type="submit" class="btn" style="background: #3b82f6; padding: 8px 15px;"><i class="fa-solid fa-save"></i> Update</button>
+                </form>
+
+                <form method="POST" action="{{ route('admin.deadlines.delete', $dl->id) }}" onsubmit="return confirm('Are you sure you want to delete this deadline?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn" style="background: #ef4444; padding: 8px 15px;"><i class="fa-solid fa-trash"></i> Delete</button>
+                </form>
+            </div>
+            @endforeach
+            
+            @if(count($deadlines) == 0)
+            <div style="text-align: center; padding: 30px; color: #94a3b8; font-style: italic; border: 1px dashed #cbd5e1; border-radius: 8px;">
+                No deadlines added yet. Use the form above to add one.
+            </div>
+            @endif
+        </div>
+    </div>
+@if(!isset($is_included))
 @endsection
+@endif

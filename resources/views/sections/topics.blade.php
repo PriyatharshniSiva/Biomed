@@ -21,7 +21,5 @@
             </div>
         @endfor
     </div>
-    <div class="text-center mt-30">
-        <a href="{{ route('submit-paper') }}" class="btn btn-green">Submit Abstract</a>
-    </div>
+
 </section>

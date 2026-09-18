@@ -50,7 +50,7 @@
                 <div class="form-group" style="padding: 25px;">
                     <label style="display: block; font-weight: 600; color: var(--admin-sidebar); margin-bottom: 10px;">Useful Links</label>
                     <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 10px;">Format: <strong>Link Text | URL</strong> (one per line). Example:<br>Home | /<br>Speakers | #speakers</p>
-                    <textarea name="footer_useful_links" class="form-control" style="width: 100%; padding: 12px 15px; border: 1px solid var(--admin-border); border-radius: 8px;" rows="5">{{ $settings['footer']['footer_useful_links'] ?? "Home | /\nAbstract Submission | #\nSpeakers | #\nCommittee | #" }}</textarea>
+                    <textarea name="footer_useful_links" class="form-control" style="width: 100%; padding: 12px 15px; border: 1px solid var(--admin-border); border-radius: 8px;" rows="5">{{ $settings['footer']['footer_useful_links'] ?? "Home | /\nSpeakers | #\nCommittee | #" }}</textarea>
                 </div>
             </div>
             

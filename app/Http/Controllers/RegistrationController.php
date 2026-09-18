@@ -14,7 +14,6 @@ class RegistrationController extends Controller
         // 1. Validation
         $rules = [
             'reg_category' => 'required',
-            'payment_method' => 'required|string',
             'consent' => 'accepted',
             'fields' => 'required|array',
         ];
@@ -40,11 +39,16 @@ class RegistrationController extends Controller
         $registration = new \App\Models\Registration();
         
         // Save the dynamic fields as JSON
-        $registration->form_data = $request->input('fields');
-        
-        // Look up the name, email, etc. to save in root level columns if they exist
-        // to make the admin view easier, even though they are inside form_data too.
         $fieldsData = $request->input('fields');
+
+        // Handle abstract file upload
+        if ($request->hasFile('abstract_file')) {
+            $path = $request->file('abstract_file')->store('abstracts', 'public');
+            $fieldsData['abstract_file'] = $path;
+        }
+
+        $registration->form_data = $fieldsData;
+        
         $registration->name = $fieldsData['name'] ?? 'N/A';
         $registration->email = $fieldsData['email'] ?? 'N/A';
         $registration->phone = $fieldsData['phone'] ?? null;
@@ -53,7 +57,7 @@ class RegistrationController extends Controller
 
         $registration->category_name = $request->input('reg_category_name', 'Registration');
         $registration->total_amount = $totalAmount;
-        $registration->payment_method = $request->input('payment_method');
+        $registration->payment_method = 'N/A';
         $registration->addons = $addons;
         $registration->payment_status = 'completed'; // auto complete for demo purposes
         

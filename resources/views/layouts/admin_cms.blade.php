@@ -52,12 +52,13 @@
         }
 
         .sidebar-header {
-            height: 70px;
-            padding: 0 20px;
+            min-height: 85px;
+            padding: 15px 20px;
             background-color: #ffffff;
             border-bottom: 1px solid var(--admin-border);
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 15px;
             color: #fff;
             font-weight: 700;
@@ -144,7 +145,7 @@
             position: sticky;
             top: 0;
             z-index: 5;
-            height: 70px;
+            height: 85px;
             padding: 0 30px;
             display: flex;
             align-items: center;
@@ -275,8 +276,8 @@
 
     <!-- Sidebar -->
     <aside class="sidebar" id="adminSidebar">
-        <div class="sidebar-header" style="justify-content: center;">
-            <img src="{{ asset('images/logo.png') }}" alt="BioMed Summit Logo" style="max-height: 65px; width: auto;">
+        <div class="sidebar-header">
+            <img src="{{ asset('images/MMC-LOGO-2.jpg') }}" alt="MMC Logo" style="height: 70px; width: auto; object-fit: contain; mix-blend-mode: multiply;">
         </div>
         <ul class="nav-links">
             <li>
@@ -297,132 +298,84 @@
                 <a href="{{ route('admin.submissions') }}" class="{{ request()->routeIs('admin.submissions') ? 'active' : '' }}">
                     <i class="fa-solid fa-file-lines"></i> Paper Submissions
                 </a>
-            </li>
-
             <li style="padding: 15px 25px 5px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: #64748b; margin-top: 10px;">
-                Modules
+                Pages
             </li>
             <li>
-                <a href="{{ route('admin.page_banners') }}" class="{{ request()->routeIs('admin.page_banners') ? 'active' : '' }}">
-                    <i class="fa-solid fa-images"></i> Page Banners
+                <a href="{{ route('admin.committee') }}" class="{{ request()->routeIs('admin.committee') ? 'active' : '' }}">
+                    <i class="fa-solid fa-users-gear"></i> Committee
                 </a>
             </li>
+            <li>
+                <a href="{{ route('admin.speakers') }}" class="{{ request()->routeIs('admin.speakers') ? 'active' : '' }}">
+                    <i class="fa-solid fa-microphone"></i> Speakers
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.awards') }}" class="{{ request()->routeIs('admin.awards') ? 'active' : '' }}">
+                    <i class="fa-solid fa-trophy"></i> Conference Awards
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.venue') }}" class="{{ request()->routeIs('admin.venue') ? 'active' : '' }}">
+                    <i class="fa-solid fa-map-location-dot"></i> Venue
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.programs') }}" class="{{ request()->routeIs('admin.programs') ? 'active' : '' }}">
+                    <i class="fa-solid fa-flask"></i> Scientific Themes
+                </a>
+            </li>
+            
+            <li style="padding: 15px 25px 5px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: #64748b; margin-top: 10px;">
+                CMS Sections
+            </li>
+
+
+
+
             <li>
                 <a href="{{ route('admin.hero') }}" class="{{ request()->routeIs('admin.hero') ? 'active' : '' }}">
                     <i class="fa-solid fa-image"></i> Hero Section
                 </a>
             </li>
             <li>
+                <a href="{{ route('admin.about_organizer') }}" class="{{ request()->routeIs('admin.about_organizer') ? 'active' : '' }}">
+                    <i class="fa-solid fa-building-user"></i> About Organizers
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('admin.about') }}" class="{{ request()->routeIs('admin.about') ? 'active' : '' }}">
-                    <i class="fa-solid fa-address-card"></i> About Section
+                    <i class="fa-solid fa-address-card"></i> About Us Section
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.conference') }}" class="{{ request()->routeIs('admin.conference') ? 'active' : '' }}">
-                    <i class="fa-solid fa-calendar-check"></i> Conference Details
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.programs') }}" class="{{ request()->routeIs('admin.programs') ? 'active' : '' }}">
-                    <i class="fa-solid fa-layer-group"></i> Programs & Themes
+                <a href="{{ route('admin.objectives') }}" class="{{ request()->routeIs('admin.objectives') ? 'active' : '' }}">
+                    <i class="fa-solid fa-bullseye"></i> Conference Objectives
                 </a>
             </li>
             <li>
                 <a href="{{ route('admin.highlights') }}" class="{{ request()->routeIs('admin.highlights') ? 'active' : '' }}">
-                    <i class="fa-solid fa-star"></i> Key Highlights
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.deadlines') }}" class="{{ request()->routeIs('admin.deadlines') ? 'active' : '' }}">
-                    <i class="fa-solid fa-calendar-check"></i> Timeline & Deadlines
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.venue_highlights') }}" class="{{ request()->routeIs('admin.venue_highlights') ? 'active' : '' }}">
-                    <i class="fa-solid fa-map-pin"></i> Venue & Highlights
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.abstracts_awards') }}" class="{{ request()->routeIs('admin.abstracts_awards') ? 'active' : '' }}">
-                    <i class="fa-solid fa-file-pdf"></i> Abstracts Settings
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.settings.registration') }}" class="{{ request()->routeIs('admin.settings.registration') ? 'active' : '' }}">
-                    <i class="fa-solid fa-address-card"></i> Registration Page
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.fees') }}" class="{{ request()->routeIs('admin.fees') ? 'active' : '' }}">
-                    <i class="fa-solid fa-tags"></i> Registration Fees
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.policies') }}" class="{{ request()->routeIs('admin.policies') ? 'active' : '' }}">
-                    <i class="fa-solid fa-file-contract"></i> Policies / Accordions
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.settings') }}" class="{{ request()->routeIs('admin.settings') ? 'active' : '' }}">
-                    <i class="fa-solid fa-globe"></i> Footer
-                </a>
-            </li>
-
-            <li style="padding: 15px 25px 5px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: #64748b; margin-top: 10px;">
-                Sub Modules
-            </li>
-            <li>
-                <a href="{{ route('admin.committee') }}" class="{{ request()->routeIs('admin.committee') ? 'active' : '' }}">
-                    <i class="fa-solid fa-users-viewfinder"></i> Committee
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.about_organizer') }}" class="{{ request()->routeIs('admin.about_organizer') ? 'active' : '' }}">
-                    <i class="fa-solid fa-building-user"></i> About Organizer
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.speakers') }}" class="{{ request()->routeIs('admin.speakers') ? 'active' : '' }}">
-                    <i class="fa-solid fa-microphone-lines"></i> Speakers
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.topics') }}" class="{{ request()->routeIs('admin.topics') ? 'active' : '' }}">
-                    <i class="fa-solid fa-list-check"></i> Topics of Discussion
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.sponsors') }}" class="{{ request()->routeIs('admin.sponsors') ? 'active' : '' }}">
-                    <i class="fa-solid fa-hand-holding-dollar"></i> Sponsors
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.awards') }}" class="{{ request()->routeIs('admin.awards') ? 'active' : '' }}">
-                    <i class="fa-solid fa-award"></i> Awards
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.venue_settings') }}" class="{{ request()->routeIs('admin.venue_settings') ? 'active' : '' }}">
-                    <i class="fa-solid fa-map-location-dot"></i> Venue Settings
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.submit_paper_settings') }}" class="{{ request()->routeIs('admin.submit_paper_settings') ? 'active' : '' }}">
-                    <i class="fa-solid fa-file-arrow-up"></i> Submit Paper Settings
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.submit_paper_fields') }}" class="{{ request()->routeIs('admin.submit_paper_fields') ? 'active' : '' }}">
-                    <i class="fa-solid fa-list-check"></i> Submit Paper Form
+                    <i class="fa-solid fa-star"></i> Conference Highlights
                 </a>
             </li>
             <li>
                 <a href="{{ route('admin.guidelines') }}" class="{{ request()->routeIs('admin.guidelines') ? 'active' : '' }}">
-                    <i class="fa-solid fa-list-ol"></i> Guidelines
+                    <i class="fa-solid fa-file-lines"></i> Abstract Guidelines
                 </a>
             </li>
 
-            <li style="margin-top: auto; padding-top: 20px; border-top: 1px solid #1A365D;">
+            <li>
+                <a href="{{ route('admin.settings.registration') }}" class="{{ request()->routeIs('admin.settings.registration') ? 'active' : '' }}">
+                    <i class="fa-solid fa-id-card"></i> Registration Settings
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.event_details') }}" class="{{ request()->routeIs('admin.event_details') ? 'active' : '' }}">
+                    <i class="fa-solid fa-calendar-alt"></i> Event Details
+                </a>
+            </li>
+            <li>
                 <a href="/" target="_blank">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> View Live Site
                 </a>

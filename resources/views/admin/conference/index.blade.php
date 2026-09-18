@@ -18,7 +18,7 @@
         @csrf
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
             
-            @foreach(['conference' => 'About Conference', 'participants' => 'Who Can Attend (Participants)'] as $groupKey => $groupName)
+            @foreach(['conference' => 'About Conference', 'objectives' => 'Conference Objectives', 'participants' => 'Who Can Attend (Participants)'] as $groupKey => $groupName)
                 @if(isset($settings[$groupKey]))
                     <div class="card" style="margin-bottom: 0;">
                         <h3 style="color: var(--admin-sidebar); font-size: 1.2rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--admin-border);">{{ $groupName }}</h3>

@@ -10,42 +10,34 @@
             {{-- Centered Header Block --}}
             <div style="text-align: center; max-width: 750px; margin: 0 auto 45px;">
                 <div style="font-size: 0.85rem; font-weight: 800; color: #009688; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">
-                    WHO CAN ATTEND
+                    {{ $settings['part_tag'] ?? 'WHO CAN ATTEND' }}
                 </div>
                 <h2 style="font-size: clamp(2.2rem, 4.5vw, 3rem); font-weight: 900; color: #112340; line-height: 1.15; letter-spacing: -0.6px; margin: 0 0 12px 0;">
-                    Our <span style="color: #009688;">Participants</span>
+                    {{ $settings['part_title'] ?? 'Our Participants' }}
                 </h2>
                 <div style="width: 50px; height: 4px; background: #009688; margin: 0 auto 18px; border-radius: 2px;"></div>
                 <p style="font-size: 1.05rem; color: #64748b; line-height: 1.7; margin: 0;">
-                    Join the confluence to bridge microbes, molecules & mankind for a sustainable future.
+                    {{ $settings['part_sub'] ?? 'Join the confluence to bridge microbes, molecules & mankind for a sustainable future.' }}
                 </p>
             </div>
 
             {{-- 5 Vertical Cards Row --}}
-            @php
-            $participants = [
-                ['icon' => 'fa-solid fa-graduation-cap',  'label' => "Students &\nResearch Scholars"],
-                ['icon' => 'fa-solid fa-microscope',      'label' => "Academicians &\nPolicy Makers"],
-                ['icon' => 'fa-solid fa-flask',           'label' => "Research\nScientists"],
-                ['icon' => 'fa-solid fa-book-open-reader','label' => "Health\nProfessionals"],
-                ['icon' => 'fa-solid fa-industry',         'label' => "Industry Experts (Pharma\n& Health)"],
-            ];
-            @endphp
-
             <div class="participant-cards-row" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
-                @foreach($participants as $p)
-                <div class="participant-v-card"
-                     style="flex: 1; min-width: 190px; background: #ffffff; padding: 38px 20px; border-radius: 16px; text-align: center; border: 1px solid #f0f4f8; box-shadow: 0 10px 30px rgba(0,0,0,0.04); transition: all 0.35s ease; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
-                    
-                    <div class="p-icon-circle" style="width: 68px; height: 68px; border-radius: 50%; background: rgba(0,150,136,0.12); display: flex; justify-content: center; align-items: center; margin-bottom: 22px; transition: all 0.35s ease;">
-                        <i class="{{ $p['icon'] }} p-icon-fa" style="font-size: 1.6rem; color: #009688; transition: all 0.35s ease;"></i>
-                    </div>
+                @for($i = 1; $i <= ($settings['participants_count'] ?? 20); $i++)
+                    @if(!empty($settings['part_' . $i . '_label']))
+                    <div class="participant-v-card"
+                         style="flex: 1; min-width: 190px; background: #ffffff; padding: 38px 20px; border-radius: 16px; text-align: center; border: 1px solid #f0f4f8; box-shadow: 0 10px 30px rgba(0,0,0,0.04); transition: all 0.35s ease; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
+                        
+                        <div class="p-icon-circle" style="width: 68px; height: 68px; border-radius: 50%; background: rgba(0,150,136,0.12); display: flex; justify-content: center; align-items: center; margin-bottom: 22px; transition: all 0.35s ease;">
+                            <i class="{{ $settings['part_' . $i . '_icon'] ?? 'fa-solid fa-user' }} p-icon-fa" style="font-size: 1.6rem; color: #009688; transition: all 0.35s ease;"></i>
+                        </div>
 
-                    <h4 style="margin: 0; font-size: 1rem; color: #112340; line-height: 1.4; font-weight: 700;">
-                        {!! nl2br(e($p['label'])) !!}
-                    </h4>
-                </div>
-                @endforeach
+                        <h4 style="margin: 0; font-size: 1rem; color: #112340; line-height: 1.4; font-weight: 700;">
+                            {!! nl2br(e($settings['part_' . $i . '_label'])) !!}
+                        </h4>
+                    </div>
+                    @endif
+                @endfor
             </div>
 
         </div>
@@ -70,155 +62,7 @@
 
 
 
-        {{-- ── EXPECTED OUTCOMES ── --}}
-        <div class="outcomes-neo-wrap" style="margin-bottom: 90px; position: relative;">
-            
-            {{-- Section Header --}}
-            <div style="text-align: center; max-width: 800px; margin: 0 auto 60px;">
-                <h3 style="font-size: clamp(2.2rem, 4vw, 3rem); font-weight: 900; color: #0f172a; margin: 0 0 16px; letter-spacing: -0.5px; line-height: 1.2;">
-                    Key Expected <span style="color: #009688;">Outcomes</span>
-                </h3>
-                <div style="width: 60px; height: 4px; background: linear-gradient(90deg, #009688, #1de9b6); border-radius: 2px; margin: 0 auto 20px;"></div>
-                <p style="font-size: 1.1rem; color: #64748b; line-height: 1.7; margin: 0;">
-                    Tangible impacts and key deliverables driving the Global One Health vision forward through innovation, policy, and education.
-                </p>
-            </div>
-
-            @php
-            $outcomes = [
-                ['icon' => 'fa-solid fa-users-gear',     'num' => '01', 'label' => 'Strengthened interdisciplinary collaborations',                         'tag' => 'Collaboration'],
-                ['icon' => 'fa-solid fa-globe',          'num' => '02', 'label' => 'International research partnerships',                                    'tag' => 'Global'],
-                ['icon' => 'fa-solid fa-book-bookmark',  'num' => '03', 'label' => 'High-quality scientific publications',                                   'tag' => 'Research'],
-                ['icon' => 'fa-solid fa-lightbulb',      'num' => '04', 'label' => 'Translation of research into innovation',                                'tag' => 'Innovation'],
-                ['icon' => 'fa-solid fa-landmark',       'num' => '05', 'label' => 'Policy recommendations for One Health',                                  'tag' => 'Policy'],
-                ['icon' => 'fa-solid fa-graduation-cap', 'num' => '06', 'label' => 'Capacity building for early-career researchers',             'tag' => 'Education'],
-            ];
-            @endphp
-
-            <div class="outcomes-grid">
-                @foreach($outcomes as $i => $o)
-                <div class="outcome-card">
-                    <div class="outcome-icon-wrapper">
-                        <i class="{{ $o['icon'] }}"></i>
-                    </div>
-                    <div class="outcome-content">
-                        <div class="outcome-tag">{{ $o['tag'] }}</div>
-                        <h4 class="outcome-title">{{ $o['label'] }}</h4>
-                    </div>
-                    <div class="outcome-num">{{ $o['num'] }}</div>
-                    <div class="outcome-hover-line"></div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-
-        <style>
-            .outcomes-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-                gap: 30px;
-                max-width: 1100px;
-                margin: 0 auto;
-            }
-            .outcome-card {
-                background: #ffffff;
-                border: 1px solid #e2e8f0;
-                border-radius: 20px;
-                padding: 40px 30px;
-                position: relative;
-                overflow: hidden;
-                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03);
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-                z-index: 1;
-            }
-            .outcome-card:hover {
-                transform: translateY(-8px);
-                box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
-                border-color: rgba(0, 150, 136, 0.3);
-            }
-            .outcome-hover-line {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 0;
-                height: 4px;
-                background: linear-gradient(90deg, #009688, #1de9b6);
-                transition: width 0.4s ease;
-            }
-            .outcome-card:hover .outcome-hover-line {
-                width: 100%;
-            }
-            .outcome-icon-wrapper {
-                width: 65px;
-                height: 65px;
-                border-radius: 16px;
-                background: rgba(0, 150, 136, 0.08);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-bottom: 25px;
-                transition: all 0.4s ease;
-                border: 1px solid rgba(0, 150, 136, 0.15);
-            }
-            .outcome-card:hover .outcome-icon-wrapper {
-                background: #009688;
-                transform: scale(1.05) rotate(-5deg);
-                box-shadow: 0 10px 20px rgba(0, 150, 136, 0.2);
-            }
-            .outcome-icon-wrapper i {
-                font-size: 1.8rem;
-                color: #009688;
-                transition: color 0.4s ease;
-            }
-            .outcome-card:hover .outcome-icon-wrapper i {
-                color: #ffffff;
-            }
-            .outcome-tag {
-                font-size: 0.75rem;
-                font-weight: 800;
-                color: #009688;
-                text-transform: uppercase;
-                letter-spacing: 2px;
-                margin-bottom: 10px;
-            }
-            .outcome-title {
-                font-size: 1.25rem;
-                font-weight: 800;
-                color: #0f172a;
-                line-height: 1.4;
-                margin: 0;
-                transition: color 0.3s ease;
-            }
-            .outcome-card:hover .outcome-title {
-                color: #009688;
-            }
-            .outcome-num {
-                position: absolute;
-                top: 20px;
-                right: 20px;
-                font-size: 4rem;
-                font-weight: 900;
-                color: rgba(15, 23, 42, 0.03);
-                line-height: 1;
-                pointer-events: none;
-                transition: color 0.4s ease, transform 0.4s ease;
-            }
-            .outcome-card:hover .outcome-num {
-                color: rgba(0, 150, 136, 0.08);
-                transform: scale(1.1) translate(-5px, 5px);
-            }
-            @media (max-width: 768px) {
-                .outcome-card {
-                    padding: 30px 20px;
-                }
-            }
-        </style>
-
-
-        {{-- ── OUR JOURNEY TO IMPACT ── --}}
+         {{-- ── OUR JOURNEY TO IMPACT ── --}}
         <div class="jz-section" style="position: relative; border-radius: 32px; overflow: hidden; padding: 70px 60px 80px;">
 
             {{-- Dark background --}}
@@ -228,21 +72,12 @@
 
             {{-- Header --}}
             <div style="text-align: center; max-width: 680px; margin: 0 auto 35px; position: relative; z-index: 2;">
-                <h3 class="jz-heading">Our Journey to <span class="jz-accent">Impact</span></h3>
+                <h3 class="jz-heading">{{ $settings['journey_title'] ?? 'Our Journey to Impact' }}</h3>
                 <div class="jz-bar"></div>
-                <p class="jz-subtext">A strategic 4-step pathway driving global collaboration into sustainable transformation.</p>
+                <p class="jz-subtext">{{ $settings['journey_sub'] ?? 'A strategic 4-step pathway driving global collaboration into sustainable transformation.' }}</p>
             </div>
 
             {{-- Zigzag Timeline --}}
-            @php
-            $journeySteps = [
-                ['num' => '01', 'title' => 'CONNECT',  'icon' => 'fa-solid fa-users',         'desc' => 'Bringing global minds together for meaningful collaboration.'],
-                ['num' => '02', 'title' => 'SHARE',    'icon' => 'fa-solid fa-share-nodes',    'desc' => 'Sharing knowledge, innovations and best practices.'],
-                ['num' => '03', 'title' => 'INNOVATE', 'icon' => 'fa-solid fa-lightbulb',      'desc' => 'Creating solutions for a healthier planet and resilient communities.'],
-                ['num' => '04', 'title' => 'IMPACT',   'icon' => 'fa-solid fa-earth-americas', 'desc' => 'Driving sustainable change for generations to come.'],
-            ];
-            @endphp
-
             <div class="jz-timeline" style="position: relative; z-index: 2;">
 
                 {{-- Central vertical spine --}}
@@ -250,19 +85,20 @@
                     <div class="jz-spine-glow"></div>
                 </div>
 
-                @foreach($journeySteps as $i => $step)
-                @php $isLeft = ($i % 2 === 0); @endphp
+                @for($i = 1; $i <= ($settings['journey_count'] ?? 20); $i++)
+                @if(!empty($settings['journey_' . $i . '_title']))
+                @php $isLeft = (($i - 1) % 2 === 0); @endphp
 
-                <div class="jz-row jz-row-delay-{{ $i }} {{ $isLeft ? 'jz-row-left' : 'jz-row-right' }}">
+                <div class="jz-row jz-row-delay-{{ $i - 1 }} {{ $isLeft ? 'jz-row-left' : 'jz-row-right' }}">
 
                     {{-- Content panel --}}
                     <div class="jz-panel">
                         <div class="jz-panel-inner">
                             <div class="jz-panel-icon-row">
-                                <span class="jz-panel-num-label">STEP {{ $step['num'] }}</span>
+                                <span class="jz-panel-num-label">STEP 0{{ $i }}</span>
                             </div>
-                            <h4 class="jz-panel-title">{{ $step['title'] }}</h4>
-                            <p class="jz-panel-desc">{{ $step['desc'] }}</p>
+                            <h4 class="jz-panel-title">{{ $settings['journey_' . $i . '_title'] }}</h4>
+                            <p class="jz-panel-desc">{{ $settings['journey_' . $i . '_desc'] ?? '' }}</p>
                         </div>
                         <div class="jz-panel-shine"></div>
                     </div>
@@ -270,14 +106,18 @@
                     {{-- Central node --}}
                     <div class="jz-node">
                         <div class="jz-node-ring"></div>
-                        <span class="jz-node-num">{{ $step['num'] }}</span>
+                        <span class="jz-node-num">0{{ $i }}</span>
                     </div>
 
                     {{-- Spacer for opposite side --}}
                     <div class="jz-spacer"></div>
+
                 </div>
-                @endforeach
+                @endif
+                @endfor
+
             </div>
+        </div>     </div>
         </div>
 
         <style>

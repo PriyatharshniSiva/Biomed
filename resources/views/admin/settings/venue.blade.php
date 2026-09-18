@@ -1,8 +1,10 @@
+@if(!isset($is_included))
 @extends('layouts.admin_cms')
 
-@section('header_title', 'Venue Settings')
+@section('header_title', 'Venue & Gallery Settings')
 
 @section('content')
+@endif
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
         <h2 style="color: var(--admin-sidebar); font-size: 1.5rem;">Venue Page Content</h2>
     </div>
@@ -13,7 +15,7 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.venue_settings.update') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.event_details.update') }}" enctype="multipart/form-data">
         @csrf
         
         <div class="card">
@@ -148,4 +150,6 @@
             </button>
         </div>
     </form>
+@if(!isset($is_included))
 @endsection
+@endif

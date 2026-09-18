@@ -14,7 +14,7 @@
         </div>
 
         <!-- Speakers Grid matching Image 1 Design -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 30px; justify-content: center;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; justify-content: center;">
             
             @php
                 $keynoteSpeakers = \App\Models\Speaker::where('type', 'keynote')->orderBy('sort_order')->get();
@@ -32,11 +32,11 @@
                 <div style="flex-grow: 1; display: flex; flex-direction: column;">
                     <h3 style="margin: 0 0 6px 0; color: #0f172a; font-size: 1.3rem; font-weight: 800; line-height: 1.3;">{{ $speaker->name }}</h3>
                     
-                    <p style="margin: 0 0 4px 0; color: #475569; font-size: 0.9rem; font-weight: 600; line-height: 1.4;">{{ $speaker->title ?? $speaker->university }}</p>
+                    <p style="margin: 0 0 4px 0; color: #475569; font-size: 0.9rem; font-weight: 600; line-height: 1.4;">{!! nl2br(e($speaker->title ?? $speaker->university)) !!}</p>
                     
-                    @if($speaker->current_role && $speaker->current_role !== $speaker->title)
+                    @if($speaker->current_role && $speaker->current_role !== $speaker->title && $speaker->current_role !== '-')
                         <p style="margin: 0 0 10px 0; color: #64748b; font-size: 0.84rem; line-height: 1.4;">{{ $speaker->current_role }}</p>
-                    @elseif($speaker->country)
+                    @elseif($speaker->country && $speaker->country !== '-')
                         <p style="margin: 0 0 10px 0; color: #64748b; font-size: 0.84rem;">{{ $speaker->university }} • {{ $speaker->country }}</p>
                     @endif
 
