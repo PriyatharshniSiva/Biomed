@@ -113,7 +113,7 @@
                     Track-wise Parallel Technical Sessions
                 </h3>
                 <p style="color: #64748b; margin-bottom: 25px;">
-                    Technical oral and poster sessions run concurrently across designated conference halls for Tracks I through V.
+                    Technical oral and poster sessions run concurrently across designated conference halls for Tracks I through VI.
                 </p>
 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
@@ -136,6 +136,10 @@
                     <div style="background: #f8fafc; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 20px;">
                         <h4 style="color: #f59e0b; margin: 0 0 8px 0; font-weight: 700;">Track V</h4>
                         <p style="margin: 0; color: #1e293b; font-weight: 600;">Environmental Microbiology & Zoonotic Surveillance</p>
+                    </div>
+                    <div style="background: #f8fafc; border-left: 4px solid #ec4899; border-radius: 8px; padding: 20px;">
+                        <h4 style="color: #ec4899; margin: 0 0 8px 0; font-weight: 700;">Track VI</h4>
+                        <p style="margin: 0; color: #1e293b; font-weight: 600;">Regenerative Health & Industrial Paradigms</p>
                     </div>
                 </div>
             </div>
