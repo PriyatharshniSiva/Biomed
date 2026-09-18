@@ -10,6 +10,9 @@
             <div style="font-size: 1.1rem; color: var(--text-body); font-weight: 500; margin-top: 4px; letter-spacing: 0.5px;">
                 Autonomous
             </div>
+            <div style="font-size: 0.95rem; color: var(--text-body); margin-top: 4px;">
+                Tambaram East, Chennai – 600059, Tamil Nadu, India
+            </div>
         </div>
 
         <!-- Action Connector -->

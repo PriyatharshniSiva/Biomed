@@ -9,91 +9,141 @@
 <div style="background: url('{{ asset('images/hero-bg.png') }}') center center/cover no-repeat; padding: 120px 0 80px 0; position: relative;">
     <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.85);"></div>
     <div class="container" style="position: relative; z-index: 1; text-align: center;">
-        <h1 style="color: #ffffff; font-size: 3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0;">VENUE</h1>
+        <h1 style="color: #ffffff; font-size: 3rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0;">VISIT</h1>
     </div>
 </div>
 
-<!-- Venue Content Section -->
-<section style="padding: 80px 0; background-color: #ffffff; font-family: 'Inter', system-ui, -apple-system, sans-serif;">
-    <div class="container" style="max-width: 1140px; margin: 0 auto; padding: 0 20px;">
+<!-- Places of Interest Section -->
+<section style="padding: 80px 0; background-color: #f8fafc; font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
         
-        <!-- Top Grid: Images & Map -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 60px;">
-            <!-- Left: Images -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <!-- Main tall image -->
-                <div style="grid-column: 1 / 2; grid-row: 1 / 3;">
-                    <img src="{{ asset('images/mcc_main.jpg') }}" alt="MCC Campus" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 4px solid #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <div style="text-align: center; margin-bottom: 60px;">
+            <h2 style="color: #0f172a; font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 800; margin-bottom: 20px;">Places of Interest in Chennai</h2>
+            <p style="color: #475569; font-size: 1.1rem; line-height: 1.8; max-width: 800px; margin: 0 auto;">
+                Chennai, the vibrant capital of Tamil Nadu, offers a rich blend of cultural heritage, history, art and coastal beauty. Conference delegates may explore these iconic destinations:
+            </p>
+        </div>
+
+        <!-- Grid of Places -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px;">
+            
+            <!-- Item 1 -->
+            <div class="visit-card" style="background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; display: flex; flex-direction: column;">
+                <img src="{{ asset('images/marina_beach.jpg') }}" alt="Marina Beach" style="width: 100%; height: 220px; object-fit: cover;">
+                <div style="padding: 25px; flex-grow: 1;">
+                    <h3 style="color: #009688; font-size: 1.3rem; font-weight: 700; margin-top: 0; margin-bottom: 10px;">Marina Beach</h3>
+                    <p style="color: #475569; font-size: 0.95rem; line-height: 1.6; margin: 0;">One of India’s longest urban beaches and an iconic landmark of Chennai.</p>
                 </div>
-                <!-- Stacked smaller images -->
-                <div>
-                    <img src="{{ asset('images/mcc_images.jpg') }}" alt="MCC Campus" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; border: 4px solid #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            </div>
+
+            <!-- Item 2 -->
+            <div class="visit-card" style="background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; display: flex; flex-direction: column;">
+                <img src="{{ asset('images/kapaleeshwarar_temple.jpg') }}" alt="Kapaleeshwarar Temple" style="width: 100%; height: 220px; object-fit: cover;">
+                <div style="padding: 25px; flex-grow: 1;">
+                    <h3 style="color: #009688; font-size: 1.3rem; font-weight: 700; margin-top: 0; margin-bottom: 10px;">Kapaleeshwarar Temple, Mylapore</h3>
+                    <p style="color: #475569; font-size: 0.95rem; line-height: 1.6; margin: 0;">A historic temple showcasing traditional Dravidian architecture.</p>
                 </div>
-                <div>
-                    <img src="{{ asset('images/mcc4.jpg') }}" alt="MCC Campus" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; border: 4px solid #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            </div>
+
+            <!-- Item 3 -->
+            <div class="visit-card" style="background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; display: flex; flex-direction: column;">
+                <img src="{{ asset('images/santhome_basilica.jpg') }}" alt="Santhome Basilica" style="width: 100%; height: 220px; object-fit: cover;">
+                <div style="padding: 25px; flex-grow: 1;">
+                    <h3 style="color: #009688; font-size: 1.3rem; font-weight: 700; margin-top: 0; margin-bottom: 10px;">Santhome Basilica</h3>
+                    <p style="color: #475569; font-size: 0.95rem; line-height: 1.6; margin: 0;">A significant Christian heritage site built over the traditional tomb of St. Thomas the Apostle.</p>
+                </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="visit-card" style="background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; display: flex; flex-direction: column;">
+                <img src="{{ asset('images/fort_st_george.jpg') }}" alt="Fort St. George" style="width: 100%; height: 220px; object-fit: cover;">
+                <div style="padding: 25px; flex-grow: 1;">
+                    <h3 style="color: #009688; font-size: 1.3rem; font-weight: 700; margin-top: 0; margin-bottom: 10px;">Fort St. George</h3>
+                    <p style="color: #475569; font-size: 0.95rem; line-height: 1.6; margin: 0;">A historic colonial landmark and an important part of Chennai’s history.</p>
+                </div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="visit-card" style="background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; display: flex; flex-direction: column;">
+                <img src="{{ asset('images/government_museum.jpg') }}" alt="Government Museum" style="width: 100%; height: 220px; object-fit: cover;">
+                <div style="padding: 25px; flex-grow: 1;">
+                    <h3 style="color: #009688; font-size: 1.3rem; font-weight: 700; margin-top: 0; margin-bottom: 10px;">Government Museum, Egmore</h3>
+                    <p style="color: #475569; font-size: 0.95rem; line-height: 1.6; margin: 0;">Home to an extensive collection of archaeology, art and bronze sculptures.</p>
+                </div>
+            </div>
+
+            <!-- Item 6 -->
+            <div class="visit-card" style="background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; display: flex; flex-direction: column;">
+                <img src="{{ asset('images/elliots_beach.jpg') }}" alt="Elliot's Beach" style="width: 100%; height: 220px; object-fit: cover;">
+                <div style="padding: 25px; flex-grow: 1;">
+                    <h3 style="color: #009688; font-size: 1.3rem; font-weight: 700; margin-top: 0; margin-bottom: 10px;">Elliot’s Beach, Besant Nagar</h3>
+                    <p style="color: #475569; font-size: 0.95rem; line-height: 1.6; margin: 0;">A popular destination for a relaxing evening by the sea.</p>
+                </div>
+            </div>
+
+            <!-- Item 7 -->
+            <div class="visit-card" style="background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; display: flex; flex-direction: column;">
+                <img src="{{ asset('images/guindy_national_park.jpg') }}" alt="Guindy National Park" style="width: 100%; height: 220px; object-fit: cover;">
+                <div style="padding: 25px; flex-grow: 1;">
+                    <h3 style="color: #009688; font-size: 1.3rem; font-weight: 700; margin-top: 0; margin-bottom: 10px;">Guindy National Park</h3>
+                    <p style="color: #475569; font-size: 0.95rem; line-height: 1.6; margin: 0;">A unique urban national park known for its native flora and fauna.</p>
+                </div>
+            </div>
+
+            <!-- Item 8 -->
+            <div class="visit-card" style="background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; display: flex; flex-direction: column;">
+                <img src="{{ asset('images/chennai_rail_museum.jpg') }}" alt="Chennai Rail Museum" style="width: 100%; height: 220px; object-fit: cover;">
+                <div style="padding: 25px; flex-grow: 1;">
+                    <h3 style="color: #009688; font-size: 1.3rem; font-weight: 700; margin-top: 0; margin-bottom: 10px;">Chennai Rail Museum</h3>
+                    <p style="color: #475569; font-size: 0.95rem; line-height: 1.6; margin: 0;">Showcasing India’s railway heritage through vintage locomotives and exhibits.</p>
+                </div>
+            </div>
+
+            <!-- Item 9 -->
+            <div class="visit-card" style="background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; display: flex; flex-direction: column;">
+                <img src="{{ asset('images/dakshinachitra.jpg') }}" alt="DakshinaChitra" style="width: 100%; height: 220px; object-fit: cover;">
+                <div style="padding: 25px; flex-grow: 1;">
+                    <h3 style="color: #009688; font-size: 1.3rem; font-weight: 700; margin-top: 0; margin-bottom: 10px;">DakshinaChitra</h3>
+                    <p style="color: #475569; font-size: 0.95rem; line-height: 1.6; margin: 0;">A cultural museum showcasing the traditional architecture, crafts and lifestyles of South India.</p>
+                </div>
+            </div>
+
+            <!-- Item 10 -->
+            <div class="visit-card" style="background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; display: flex; flex-direction: column;">
+                <img src="{{ asset('images/birla_planetarium.jpg') }}" alt="Birla Planetarium" style="width: 100%; height: 220px; object-fit: cover;">
+                <div style="padding: 25px; flex-grow: 1;">
+                    <h3 style="color: #009688; font-size: 1.3rem; font-weight: 700; margin-top: 0; margin-bottom: 10px;">Birla Planetarium</h3>
+                    <p style="color: #475569; font-size: 0.95rem; line-height: 1.6; margin: 0;">A popular destination for astronomy and science enthusiasts.</p>
                 </div>
             </div>
             
-            <!-- Right: Map -->
-            <div style="border-radius: 8px; overflow: hidden; border: 4px solid #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.6656816562095!2d80.11300951482084!3d12.929202790883648!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a525f0a00000001%3A0x1a8f9b9f71c9df68!2sMadras%20Christian%20College!5e0!3m2!1sen!2sin!4v1689255018693!5m2!1sen!2sin" width="100%" height="100%" style="border:0; min-height: 415px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
         </div>
 
-        <!-- Content -->
-        <div style="max-width: 900px; margin: 0 auto;">
-            
-            @php
-                $settings = \App\Models\SiteSetting::where('group', 'venue')->pluck('value', 'key');
-            @endphp
-
-            <div style="margin-bottom: 40px; text-align: center;">
-                <h3 style="color: #0f172a; font-size: 1.4rem; font-weight: 700; margin-bottom: 15px;">{{ $settings['venue_s1_heading'] ?? 'Discover Madras Christian College' }}</h3>
-                <p style="color: #475569; font-size: 0.95rem; line-height: 1.8;">
-                    {{ $settings['venue_s1_content'] ?? "Founded in 1837, Madras Christian College (MCC) is one of Asia's oldest and most prestigious academic institutions. Set within a sprawling, lush 320-acre scrub jungle campus in Tambaram, Chennai, MCC offers a serene, intellectually stimulating environment that provides a perfect backdrop for international conferences, global collaboration, and cutting-edge scientific exchange." }}
-                </p>
-            </div>
-
-            <div style="margin-bottom: 40px; text-align: center;">
-                <h3 style="color: #0f172a; font-size: 1.4rem; font-weight: 700; margin-bottom: 15px;">{{ $settings['venue_s2_heading'] ?? 'A Hub of Heritage & Innovation' }}</h3>
-                <p style="color: #475569; font-size: 0.95rem; line-height: 1.8;">
-                    {{ $settings['venue_s2_content'] ?? 'MCC seamlessly blends a rich historical legacy with modern scientific inquiry. With a profound history of producing renowned scholars, researchers, and global leaders, the institution continues to foster excellence. Its proximity to prominent research hubs in Chennai and its own state-of-the-art facilities make it an ideal meeting point for the BioMed Summit 2027.' }}
-                </p>
-            </div>
-
-            <div style="margin-bottom: 40px; text-align: center;">
-                <h3 style="color: #0f172a; font-size: 1.4rem; font-weight: 700; margin-bottom: 15px;">{{ $settings['venue_s3_heading'] ?? 'Campus Biodiversity & Environment' }}</h3>
-                <p style="color: #475569; font-size: 0.95rem; line-height: 1.8;">
-                    {{ $settings['venue_s3_content'] ?? 'The MCC campus is a documented sanctuary of rare flora and fauna, providing delegates with a refreshing escape from the urban hustle. During the conference, attendees can enjoy:' }}
-                </p>
-                <ul style="color: #475569; font-size: 0.95rem; line-height: 1.8; text-align: left; max-width: 700px; margin: 20px auto 0 auto; padding-left: 20px;">
-                    @php
-                        $bulletsText = $settings['venue_s3_bullets'] ?? "Exploring the expansive, protected scrub jungle ecosystem\nHistoric British-era architectural landmarks seamlessly integrated with modern halls\nA tranquil, pollution-free atmosphere ideal for focused scientific networking\nThe vibrant cultural heritage and traditional South Indian hospitality of Chennai";
-                        $bullets = array_filter(array_map('trim', explode("\n", $bulletsText)));
-                    @endphp
-                    @foreach($bullets as $bullet)
-                        <li style="margin-bottom: 8px;">{{ $bullet }}</li>
-                    @endforeach
-                </ul>
-            </div>
-
-            <div style="margin-bottom: 40px; text-align: center;">
-                <h3 style="color: #0f172a; font-size: 1.4rem; font-weight: 700; margin-bottom: 15px;">{{ $settings['venue_s4_heading'] ?? 'Easy Accessibility' }}</h3>
-                <p style="color: #475569; font-size: 0.95rem; line-height: 1.8;">
-                    {{ $settings['venue_s4_content'] ?? 'Located in the bustling metropolis of Chennai, MCC is exceptionally well-connected. It is easily accessible via the Chennai International Airport (MAA), which offers direct flights worldwide. Furthermore, the Tambaram Railway Station and major transit hubs are situated directly opposite the campus, ensuring seamless domestic and international travel for all delegates.' }}
-                </p>
-            </div>
-
-            <div style="text-align: center;">
-                <h3 style="color: #0f172a; font-size: 1.4rem; font-weight: 700; margin-bottom: 15px;">{{ $settings['venue_s5_heading'] ?? 'World-Class Conference Facilities' }}</h3>
-                <p style="color: #475569; font-size: 0.95rem; line-height: 1.8;">
-                    {{ $settings['venue_s5_content'] ?? 'MCC boasts a wide array of premium venues, including historic grand auditoriums and highly equipped modern smart-halls. With advanced audio-visual technology, high-speed connectivity, and spacious seating, the campus provides a highly professional, comfortable, and accommodating environment for large-scale plenary sessions and specialized workshops alike.' }}
-                </p>
-            </div>
-
+        <!-- Quote -->
+        <div style="margin-top: 70px; padding: 40px; background: #0f172a; border-radius: 16px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <h4 style="color: #009688; font-size: clamp(1.2rem, 3vw, 1.8rem); font-style: italic; font-weight: 600; margin: 0; line-height: 1.5;">
+                “Experience Chennai — where tradition, heritage, science and the sea meet.”
+            </h4>
         </div>
+
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.visit-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px)';
+                this.style.boxShadow = '0 20px 40px rgba(0,0,0,0.1)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'none';
+                this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.05)';
+            });
+        });
+    });
+</script>
 
 @include('sections.footer')
 @endsection

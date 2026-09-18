@@ -368,3 +368,7 @@ Route::get('/pre-conference', function () {
     return view('pre_conference', compact('bannerSettings'));
 })->name('pre-conference');
 
+Route::get('/mcc-memorial', function () {
+    return view('mcc_memorial');
+})->name('mcc-memorial');
+
