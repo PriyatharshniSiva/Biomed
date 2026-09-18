@@ -77,7 +77,21 @@
                         </div>
                     @endforeach
                     
-                    <div class="form-group file-upload-group" id="abstract-upload-section" style="grid-column: 1 / -1; margin-top: 20px;">
+                    <div class="form-group" style="grid-column: 1 / -1; margin-top: 20px; background: #fff; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                        <label style="font-weight: 700; color: var(--navy-dark); margin-bottom: 15px; display: block; font-size: 1.15rem;">Registration Type <span style="color: #ef4444;">*</span></label>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                            <label class="reg-type-option" style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 15px 25px; border: 2px solid #e2e8f0; border-radius: 10px; background: #fff; transition: all 0.3s; flex: 1; min-width: 200px;">
+                                <input type="radio" name="fields[registration_type]" value="Participation" required style="accent-color: var(--teal-accent); width: 20px; height: 20px;" onchange="toggleAbstractUpload(this.value)">
+                                <span style="font-weight: 700; color: var(--navy-dark); font-size: 1.1rem;">Participation</span>
+                            </label>
+                            <label class="reg-type-option" style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 15px 25px; border: 2px solid #e2e8f0; border-radius: 10px; background: #fff; transition: all 0.3s; flex: 1; min-width: 200px;">
+                                <input type="radio" name="fields[registration_type]" value="Presentation" required style="accent-color: var(--teal-accent); width: 20px; height: 20px;" onchange="toggleAbstractUpload(this.value)">
+                                <span style="font-weight: 700; color: var(--navy-dark); font-size: 1.1rem;">Presentation</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group file-upload-group" id="abstract-upload-section" style="grid-column: 1 / -1; margin-top: 10px; display: none;">
                         <label for="abstract_file" class="file-upload-label" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; border: 2px dashed var(--teal-accent); border-radius: 12px; background: #f8fafc; cursor: pointer; transition: all 0.3s ease; text-align: center;">
                             <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3.5rem; color: var(--teal-accent); margin-bottom: 15px;"></i>
                             <span style="font-weight: 700; font-size: 1.3rem; color: var(--navy-dark); margin-bottom: 8px;">Upload Abstract Document</span>
@@ -101,7 +115,7 @@
                 </div>
 
 
-                <div class="category-selection" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px;">
+                <div class="category-selection" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
                     @foreach($registrationFees as $index => $fee)
                         @php
                             $offlineVal = (int)str_replace(',', '', $fee->price_inr);
@@ -120,6 +134,16 @@
                             <strong class="cat-price-display" style="font-size: 1.3rem; color: var(--teal-accent);">{{ number_format($offlineVal) }} INR</strong>
                         </label>
                     @endforeach
+                </div>
+
+                <!-- Payment QR Section -->
+                <div id="payment-qr-section" style="display: none; background: #0f172a; padding: 40px; border-radius: 12px; margin-bottom: 40px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                    <h4 style="color: #ffffff; font-size: 1.35rem; font-weight: 700; margin-top: 0; margin-bottom: 25px;">Scan to Pay</h4>
+                    <div style="background: #ffffff; display: inline-block; padding: 20px; border-radius: 10px; margin-bottom: 25px;">
+                        <img src="{{ asset('images/payment_qr_final.png') }}" alt="Payment QR Code" style="max-width: 280px; width: 100%; display: block;">
+                    </div>
+                    <div style="font-size: 1.05rem; font-weight: 600; color: #94a3b8; margin-bottom: 10px;">OR Pay via Link:</div>
+                    <a href="https://u.payu.in/PAYUMN/IJZCzKXf5LTs" target="_blank" style="color: #20c997; font-weight: 700; font-size: 1.15rem; word-break: break-all; text-decoration: underline;">https://u.payu.in/PAYUMN/IJZCzKXf5LTs</a>
                 </div>
 
                 {{-- Add-On section removed --}}
@@ -163,6 +187,15 @@
                 </div>
 
 
+                <div id="payment-details-section" style="display: none; background: #fff; padding: 30px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 35px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                    <h3 style="margin-top: 0; margin-bottom: 20px; color: var(--navy-dark); font-size: 1.25rem;">Payment Verification</h3>
+                    <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 20px;">Please complete the payment using the QR code or link above, and enter your Transaction / Reference ID here.</p>
+                    <div class="form-group">
+                        <label style="font-weight: 700; color: var(--navy-dark); margin-bottom: 10px; display: block;">Transaction ID / Reference Number <span style="color: #ef4444;">*</span></label>
+                        <input type="text" name="fields[transaction_id]" id="transaction_id" class="form-control" placeholder="Enter your transaction ID" style="border: 2px solid #e2e8f0; padding: 12px 15px; border-radius: 8px; width: 100%;">
+                    </div>
+                </div>
+
                 <div class="reg-consent" style="margin-bottom: 35px; background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0;">
                     <label style="display: flex; gap: 12px; align-items: flex-start; cursor: pointer; margin: 0;">
                         <input type="checkbox" name="consent" required style="margin-top: 4px; width: 18px; height: 18px; accent-color: var(--teal-accent);"> 
@@ -171,7 +204,7 @@
                 </div>
 
                 <div class="reg-actions" style="display: flex; justify-content: flex-end;">
-                    <button type="submit" class="btn btn-teal" style="padding: 16px 40px; font-size: 1.2rem; border-radius: 10px; width: 100%; box-shadow: 0 10px 20px rgba(0, 168, 150, 0.2); display: flex; justify-content: center; align-items: center; gap: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;"><span id="submit-button-text">{{ $settings['reg_button_text'] ?? 'Proceed to Pay' }}</span> <i class="fa-solid fa-arrow-right"></i></button>
+                    <button type="submit" class="btn btn-teal" style="padding: 16px 40px; font-size: 1.2rem; border-radius: 10px; width: 100%; box-shadow: 0 10px 20px rgba(0, 168, 150, 0.2); display: flex; justify-content: center; align-items: center; gap: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;"><span id="submit-button-text">Submit Registration</span> <i class="fa-solid fa-paper-plane"></i></button>
                 </div>
             </form>
 
@@ -206,7 +239,7 @@
             const paymentSection = document.getElementById('payment-section');
             const orderSummarySection = document.getElementById('order-summary-section');
             const submitButtonText = document.getElementById('submit-button-text');
-            const defaultButtonText = {!! json_encode($settings['reg_button_text'] ?? 'Proceed to Pay') !!};
+            const defaultButtonText = "Submit Registration";
 
             function updateModePrices() {
                 if (paymentSection) paymentSection.style.display = 'block';
@@ -300,9 +333,15 @@
                     sumCatName.innerText = catName + ' Registration';
                     sumCatPrice.innerText = catPrice.toLocaleString() + ' INR';
                     total += catPrice;
+                    document.getElementById('payment-qr-section').style.display = 'block';
+                    document.getElementById('payment-details-section').style.display = 'block';
+                    document.getElementById('transaction_id').setAttribute('required', 'required');
                 } else {
                     sumCatName.innerText = 'Select a Category';
                     sumCatPrice.innerText = '0 INR';
+                    document.getElementById('payment-qr-section').style.display = 'none';
+                    document.getElementById('payment-details-section').style.display = 'none';
+                    document.getElementById('transaction_id').removeAttribute('required');
                 }
 
                 // Handle dynamic addons summary
@@ -335,7 +374,33 @@
             calculateTotal();
 
             // Abstract Upload Logic
-            const interestSelect = document.querySelector('select[name="fields[interested_in]"]');
+            window.toggleAbstractUpload = function(val) {
+                const uploadSection = document.getElementById('abstract-upload-section');
+                const fileInput = document.getElementById('abstract_file');
+                const options = document.querySelectorAll('.reg-type-option');
+                
+                // Style the options
+                options.forEach(opt => {
+                    const radio = opt.querySelector('input');
+                    if(radio.checked) {
+                        opt.style.borderColor = 'var(--teal-accent)';
+                        opt.style.background = '#f0fdfa';
+                    } else {
+                        opt.style.borderColor = '#e2e8f0';
+                        opt.style.background = '#fff';
+                    }
+                });
+
+                if(val === 'Presentation') {
+                    uploadSection.style.display = 'block';
+                } else {
+                    uploadSection.style.display = 'none';
+                    fileInput.value = ''; 
+                    document.getElementById('file-chosen').style.display = 'none';
+                    document.getElementById('file-error').style.display = 'none';
+                }
+            };
+
             const abstractUploadSection = document.getElementById('abstract-upload-section');
             const abstractFileInput = document.getElementById('abstract_file');
             const fileChosenLabel = document.getElementById('file-chosen');
@@ -343,6 +408,17 @@
             const fileError = document.getElementById('file-error');
 
             if (abstractFileInput) {
+                form.addEventListener('submit', function(e) {
+                    const regType = document.querySelector('input[name="fields[registration_type]"]:checked');
+                    if (regType && regType.value === 'Presentation') {
+                        if (!abstractFileInput.files || abstractFileInput.files.length === 0) {
+                            e.preventDefault(); 
+                            fileError.style.display = 'block';
+                            abstractUploadSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }
+                });
+
                 abstractFileInput.addEventListener('change', function(e) {
                     if (this.files && this.files.length > 0) {
                         fileChosenLabel.style.display = 'inline-block';

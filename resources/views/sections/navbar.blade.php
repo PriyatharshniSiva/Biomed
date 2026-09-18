@@ -24,7 +24,8 @@
         <a href="{{ route('scientific-themes') }}">Tracks</a>
         <a href="{{ route('schedule') }}">Schedule</a>
         <a href="{{ route('awards') }}">Awards</a>
-        <a href="{{ route('venue') }}">Venue</a>
+        <a href="{{ route('pre-conference') }}">Pre-Conference</a>
+        <a href="{{ route('venue') }}">Visit</a>
     </div>
     
     <a href="{{ route('registration') }}" class="btn btn-green btn-register-nav">REGISTER <i class="fa-solid fa-arrow-right"></i></a>

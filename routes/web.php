@@ -313,3 +313,58 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::put('/awards/{id}', [AdminController::class, 'updateAward'])->name('admin.awards.update');
     Route::delete('/awards/{id}', [AdminController::class, 'destroyAward'])->name('admin.awards.destroy');
 });
+
+// Award Application Routes
+Route::get('/downloads/proforma', function () {
+    $headers = [
+        "Content-type"        => "application/msword",
+        "Content-Disposition" => "attachment;Filename=Proforma_For_Nomination.doc",
+        "Pragma"              => "no-cache",
+        "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+        "Expires"             => "0"
+    ];
+    return response()->view('downloads.proforma')->withHeaders($headers);
+})->name('download.proforma');
+
+Route::get('/downloads/proforma-scholar', function () {
+    $headers = [
+        "Content-type"        => "application/msword",
+        "Content-Disposition" => "attachment;Filename=Proforma_For_Scholar_Award.doc",
+        "Pragma"              => "no-cache",
+        "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+        "Expires"             => "0"
+    ];
+    return response()->view('downloads.proforma_scholar')->withHeaders($headers);
+})->name('download.proforma_scholar');
+
+Route::get('/downloads/proforma-innovator', function () {
+    $headers = [
+        "Content-type"        => "application/msword",
+        "Content-Disposition" => "attachment;Filename=Proforma_For_Innovator_Award.doc",
+        "Pragma"              => "no-cache",
+        "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+        "Expires"             => "0"
+    ];
+    return response()->view('downloads.proforma_innovator')->withHeaders($headers);
+})->name('download.proforma_innovator');
+
+Route::post('/awards/apply', function (\Illuminate\Http\Request $request) {
+    $request->validate([
+        'application_file' => 'required|file|mimes:doc,docx,pdf|max:10240', // 10MB max
+    ]);
+
+    $awardName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $request->input('award_name', 'Award'));
+    $file = $request->file('application_file');
+    $filename = time() . '_' . $awardName . '_' . $file->getClientOriginalName();
+    
+    // Store in storage/app/public/award_applications
+    $file->storeAs('public/award_applications', $filename);
+    
+    return redirect()->back()->with('success', 'Your application has been submitted successfully!');
+})->name('awards.apply');
+
+Route::get('/pre-conference', function () {
+    $bannerSettings = \App\Models\SiteSetting::where('group', 'page_banners')->pluck('value', 'key')->toArray();
+    return view('pre_conference', compact('bannerSettings'));
+})->name('pre-conference');
+

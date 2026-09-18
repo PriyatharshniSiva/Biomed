@@ -20,7 +20,7 @@
 
         <!-- Main Title -->
         <h1 class="hero-title" style="margin-bottom: 16px; text-transform: uppercase; font-weight: 800; line-height: 1.15; color: var(--navy-dark);">
-            GLOBAL ONE HEALTH<br>
+            GLOBAL <span style="color: #009688;">ONE HEALTH</span><br>
             CONFLUENCE 2026
         </h1>
 
